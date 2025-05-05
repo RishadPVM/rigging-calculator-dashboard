@@ -27,51 +27,65 @@ class VerifyOtp extends StatelessWidget {
         children: [
           Expanded(
             flex: 2,
-            child: SizedBox(
-              height: double.infinity,
-              child: Center(
-                child: SizedBox(
-                  width: 420,
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Verify your otp ",
-                        style: Theme.of(context).textTheme.displayLarge,
-                      ),
-                      SizedBox(height: 8.0),
-                      Text(
-                        "Enter your details down below",
-                        style: Theme.of(context).textTheme.bodyLarge,
-                      ),
-                      SizedBox(height: 40),
-                      Pinput(
-                        controller: otpController,
-                        length: 6,
-                        defaultPinTheme: defaultPinTheme,
-                        onChanged: (value) {},
-                      ),
-                      SizedBox(height: 40),
-                      SizedBox(
-                        height: 50,
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          child: Text("Verify OTP"),
-                          onPressed: () {
-                            Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => const ConfirmPassword(),
-                              ),
-                            );
-                          },
+            child: Column(
+              children: [
+                Row(
+                  children: [
+                    const SizedBox(width: 20),
+                    IconButton(
+                      onPressed: () {
+                        Navigator.pop(context);
+                      },
+                      icon: const Icon(Icons.arrow_back_ios_new),
+                    ),
+                   
+                  ],
+                  
+                ),
+                Expanded(
+                  child: SizedBox(
+                    width: 420,
+                    child: Column(
+                     mainAxisAlignment: MainAxisAlignment.center,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Verify your otp ",
+                          style: Theme.of(context).textTheme.displayLarge,
                         ),
-                      ),
-                    ],
+                        SizedBox(height: 8.0),
+                        Text(
+                          "Enter your details down below",
+                          style: Theme.of(context).textTheme.bodyLarge,
+                        ),
+                        SizedBox(height: 40),
+                        Pinput(
+                          controller: otpController,
+                          length: 6,
+                          defaultPinTheme: defaultPinTheme,
+                          onChanged: (value) {},
+                        ),
+                        SizedBox(height: 40),
+                        SizedBox(
+                          height: 50,
+                          width: double.infinity,
+                          child: ElevatedButton(
+                            child: Text("Verify OTP"),
+                            onPressed: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => const ConfirmPassword(),
+                                ),
+                              );
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
                   ),
                 ),
-              ),
+              ],
             ),
           ),
           Expanded(child: LogoCard()),
