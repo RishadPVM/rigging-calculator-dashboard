@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../utils/appcolors.dart';
-import '../utils/image_icon_path.dart';
+import '../utils/assets.dart';
 
 class CseaechBar extends StatelessWidget {
   final String hintText;
@@ -32,7 +32,7 @@ class CseaechBar extends StatelessWidget {
           prefixIcon: Padding(
             padding: const EdgeInsets.all(12),
             child: SvgPicture.asset(
-              ImageAndIconPath.searchIcon,
+              Assets.searchIcon,
               width: 24,
               height: 24,
               colorFilter: ColorFilter.mode(AppColors.cGrey, BlendMode.srcIn),

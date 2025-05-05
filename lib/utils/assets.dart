@@ -1,6 +1,7 @@
-class ImageAndIconPath {
+class Assets {
   //Icons
   static const usersIcon = 'assets/icon/3 User.svg';
+  static const dashBoard = 'assets/icon/Home.svg';
   static const craneIcon = 'assets/icon/crane.svg';
   static const adIcon = 'assets/icon/ad.svg';
   static const settingsIcon = 'assets/icon/Setting.svg';

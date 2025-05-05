@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 import '../utils/appcolors.dart';
-import '../utils/image_icon_path.dart';
+import '../utils/assets.dart';
 
 class Header extends StatelessWidget {
   final String title;
@@ -28,7 +28,7 @@ class Header extends StatelessWidget {
                   ),
                   backgroundColor: AppColors.cGrey100,
                 ),
-                icon: SvgPicture.asset(ImageAndIconPath.notificationIcon),
+                icon: SvgPicture.asset(Assets.notificationIcon),
                 onPressed: () {},
               ),
             ),
@@ -46,7 +46,7 @@ class Header extends StatelessWidget {
                   ClipRRect(
                     borderRadius: BorderRadius.circular(4),
                     child: Image.network(
-                      ImageAndIconPath.demoProfileImg,
+                      Assets.demoProfileImg,
                       height: 40,
                       width: 40,
                       fit: BoxFit.cover,
@@ -55,7 +55,7 @@ class Header extends StatelessWidget {
                   PopupMenuButton(
                     color: AppColors.cWhite,
 
-                    icon: SvgPicture.asset(ImageAndIconPath.arrowDownIcon),
+                    icon: SvgPicture.asset(Assets.arrowDownIcon),
                     itemBuilder: (context) {
                       return [
                         const PopupMenuItem(

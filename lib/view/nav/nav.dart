@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
-import 'package:leo_rigging_dashboard/utils/image_icon_path.dart';
+import 'package:leo_rigging_dashboard/utils/assets.dart';
 import 'package:leo_rigging_dashboard/view/nav/controller/navcontroller.dart';
 
 class NavPage extends StatelessWidget {
@@ -33,7 +33,7 @@ class NavPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
-                      Image.asset(ImageAndIconPath.logoWithImg),
+                      Image.asset(Assets.logoWithImg),
                       const SizedBox(height: 20),
                       SidebarTile(),
                     ],
@@ -58,13 +58,14 @@ class SidebarTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Navcontroller controller = Get.find<Navcontroller>();
 
-    List<String> names = ["Users", "Cranes", "Advertisements", "Settings"];
+    List<String> names = ["Dashboard","Users", "Cranes", "Advertisements", "Settings"];
 
     List<String> icons = [
-      ImageAndIconPath.usersIcon,
-      ImageAndIconPath.craneIcon,
-      ImageAndIconPath.adIcon,
-      ImageAndIconPath.settingsIcon,
+      Assets.dashBoard,
+      Assets.usersIcon,
+      Assets.craneIcon,
+      Assets.adIcon,
+      Assets.settingsIcon,
     ];
     return ListView.builder(
       itemCount: controller.pages.length,
