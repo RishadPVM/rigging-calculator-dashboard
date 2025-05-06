@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/view/users/controller/user_controller.dart';
 
 import '../utils/appcolors.dart';
 import '../utils/assets.dart';
@@ -10,6 +12,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    UserController userController = Get.put(UserController());
     return Row(
       children: [
         Expanded(
@@ -29,7 +32,9 @@ class Header extends StatelessWidget {
                   backgroundColor: AppColors.cGrey100,
                 ),
                 icon: SvgPicture.asset(Assets.notificationIcon),
-                onPressed: () {},
+                onPressed: () {
+userController.fetchUsers();
+                },
               ),
             ),
             Container(

@@ -1,0 +1,94 @@
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+import 'package:leo_rigging_dashboard/core/api/api_url.dart';
+
+class ApiService {
+  // Singleton instance
+  static final ApiService _instance = ApiService._internal();
+
+  // Factory constructor
+  factory ApiService() => _instance;
+
+  // Private constructor
+  ApiService._internal();
+
+  // Headers for API requests
+  final Map<String, String> _defaultHeaders = {
+    'Content-Type': 'application/json',
+    'Accept': 'application/json',
+  };
+
+  // GET request
+  Future<dynamic> get(String url, {Map<String, String>? headers}) async {
+    try {
+      final response = await http.get(
+        Uri.parse(url),
+        headers: {..._defaultHeaders, ...?headers},
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  // POST request
+  Future<dynamic> post(String url, {Map<String, dynamic>? body, Map<String, String>? headers}) async {
+    try {
+      final response = await http.post(
+        Uri.parse(url),
+        headers: {..._defaultHeaders, ...?headers},
+        body: json.encode(body),
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  // PUT request
+  Future<dynamic> put(String url, {Map<String, dynamic>? body, Map<String, String>? headers}) async {
+    try {
+      final response = await http.put(
+        Uri.parse(url),
+        headers: {..._defaultHeaders, ...?headers},
+        body: json.encode(body),
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  // DELETE request
+  Future<dynamic> delete(String url, {Map<String, String>? headers}) async {
+    try {
+      final response = await http.delete(
+        Uri.parse(url),
+        headers: {..._defaultHeaders, ...?headers},
+      );
+      return _handleResponse(response);
+    } catch (e) {
+      throw _handleError(e);
+    }
+  }
+
+  // Handle API response
+  dynamic _handleResponse(http.Response response) {
+    final statusCode = response.statusCode;
+    final responseBody = json.decode(response.body);
+
+    if (statusCode >= 200 && statusCode < 300) {
+      return responseBody;
+    } else {
+      throw Exception('API Error: $statusCode - ${responseBody['message'] ?? 'Unknown error'}');
+    }
+  }
+
+  // Handle errors
+  Exception _handleError(dynamic error) {
+    if (error is http.ClientException) {
+      return Exception('Network error: Please check your internet connection');
+    }
+    return Exception('Unexpected error: $error');
+  }
+}
