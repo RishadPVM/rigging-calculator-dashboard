@@ -1,14 +1,22 @@
 import 'package:flutter/material.dart';
-import 'package:leo_rigging_dashboard/utils/appcolors.dart';
-import 'package:leo_rigging_dashboard/widget/c_search_bar.dart';
+import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 
+import '../../core/country_decode.dart';
+import '../../model/user_model.dart';
+import '../../utils/appcolors.dart';
+import '../../widget/c_search_bar.dart';
 import '../../widget/header.dart';
+import 'controller/user_controller.dart'; // For formatting dates
 
 class UsersPage extends StatelessWidget {
   const UsersPage({super.key});
 
   @override
   Widget build(BuildContext context) {
+    // Initialize UserController
+    final UserController userController = Get.put(UserController());
+
     return DefaultTabController(
       length: 3,
       child: Scaffold(
@@ -66,17 +74,42 @@ class UsersPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  CseaechBar(hintText: "Search..."),
+                  CseaechBar(
+                    hintText: "Search...",
+                    onChanged: (value) {
+                      userController.searchUsers(value); // Trigger search
+                    },
+                  ),
                 ],
               ),
+              
               const SizedBox(height: 20),
               Expanded(
-                child: TabBarView(
-                  children: [
-                    _buildTable(context, 'Users', false),
-                    _buildTable(context, 'Sponsors', true),
-                    _buildTable(context, 'Advertisers', false),
-                  ],
+                child: Obx(
+                  () => userController.isLoading.value
+                      ? const Center(child: CircularProgressIndicator())
+                      : TabBarView(
+                          children: [
+                            _buildTable(
+                              context,
+                              'Users',
+                              userController.filteredUsers, // Use filteredUsers
+                              false,
+                            ),
+                            _buildTable(
+                              context,
+                              'Sponsors',
+                              userController.filteredUsers, // Use filteredUsers
+                              true,
+                            ),
+                            _buildTable(
+                              context,
+                              'Advertisers',
+                              userController.filteredUsers, // Use filteredUsers
+                              false,
+                            ),
+                          ],
+                        ),
                 ),
               ),
             ],
@@ -89,27 +122,20 @@ class UsersPage extends StatelessWidget {
   static Widget _buildTable(
     BuildContext context,
     String tabType,
+    List<UserModel> users,
     bool isSponsors,
   ) {
-    final List<Map<String, String>> companies = List.generate(20, (index) {
-      return {
-        'sn': (index + 1).toString(),
-        'company': '$tabType Company $index',
-        'email': '$tabType$index@example.com',
-        'country': 'Country $index',
-        'lastActive': '14-04-2025',
-        'createdDate': '01-03-2025',
-        'ads': isSponsors ? '4' : '',
-        'price': isSponsors ? '500' : '',
-      };
-    });
+    // Filter users based on tabType if needed (e.g., Sponsors might have isPaymentStatus == true)
+    final filteredUsers = isSponsors
+        ? users.where((user) => user.isPaymentStatus).toList()
+        : users;
 
     final List<String> headers = [
-      'SN',
+      'SN (${filteredUsers.length})',
       'Company info',
       'E-mail',
       'Country',
-      ...isSponsors ? ['Ads', 'Price'] : [],
+      if (isSponsors) ...['Ads', 'Price'],
       'Last active',
       'Created date',
     ];
@@ -121,95 +147,104 @@ class UsersPage extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Table(
-              columnWidths:
-                  isSponsors
-                      ? const {
-                        0: FlexColumnWidth(1),
-                        1: FlexColumnWidth(2),
-                        2: FlexColumnWidth(2),
-                        3: FlexColumnWidth(1.5),
-                        4: FlexColumnWidth(1),
-                        5: FlexColumnWidth(1),
-                        6: FlexColumnWidth(1.5),
-                        7: FlexColumnWidth(1.5),
-                      }
-                      : const {
-                        0: FlexColumnWidth(1),
-                        1: FlexColumnWidth(2),
-                        2: FlexColumnWidth(2),
-                        3: FlexColumnWidth(1.5),
-                        4: FlexColumnWidth(1.5),
-                        5: FlexColumnWidth(1.5),
-                      },
+              columnWidths: isSponsors
+                  ? const {
+                      0: FlexColumnWidth(1),
+                      1: FlexColumnWidth(2),
+                      2: FlexColumnWidth(2),
+                      3: FlexColumnWidth(1.5),
+                      4: FlexColumnWidth(1),
+                      5: FlexColumnWidth(1),
+                      6: FlexColumnWidth(1.5),
+                      7: FlexColumnWidth(1.5),
+                    }
+                  : const {
+                      0: FlexColumnWidth(1),
+                      1: FlexColumnWidth(2),
+                      2: FlexColumnWidth(2),
+                      3: FlexColumnWidth(1.5),
+                      4: FlexColumnWidth(1.5),
+                      5: FlexColumnWidth(1.5),
+                    },
               children: [
                 TableRow(
                   decoration: BoxDecoration(color: Colors.grey[300]),
-                  children:
-                      headers
-                          .map(
-                            (header) => Padding(
-                              padding: const EdgeInsets.symmetric(
-                                horizontal: 16,
-                                vertical: 12,
-                              ),
-                              child: Text(
-                                header,
-                                style: Theme.of(context).textTheme.bodyLarge
-                                    ?.copyWith(fontWeight: FontWeight.bold),
-                              ),
-                            ),
-                          )
-                          .toList(),
+                  children: headers
+                      .map(
+                        (header) => Padding(
+                          padding: const EdgeInsets.symmetric(
+                            horizontal: 16,
+                            vertical: 12,
+                          ),
+                          child: Text(
+                            header,
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge
+                                ?.copyWith(fontWeight: FontWeight.bold),
+                          ),
+                        ),
+                      )
+                      .toList(),
                 ),
               ],
             ),
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              final data = companies[index];
+              final user = filteredUsers[index];
               Color rowColor =
                   index.isEven ? AppColors.cWhite : AppColors.cGrey100;
+
+              // Format dates
+              final dateFormatter = DateFormat('dd-MM-yyyy');
+              final lastActive = user.lastActiveAt != null
+                  ? dateFormatter.format(user.lastActiveAt!)
+                  : 'N/A';
+              final createdDate = dateFormatter.format(user.createdAt);
 
               return Container(
                 color: rowColor,
                 child: Table(
-                  columnWidths:
-                      isSponsors
-                          ? const {
-                            0: FlexColumnWidth(1),
-                            1: FlexColumnWidth(2),
-                            2: FlexColumnWidth(2),
-                            3: FlexColumnWidth(1.5),
-                            4: FlexColumnWidth(1),
-                            5: FlexColumnWidth(1),
-                            6: FlexColumnWidth(1.5),
-                            7: FlexColumnWidth(1.5),
-                          }
-                          : const {
-                            0: FlexColumnWidth(1),
-                            1: FlexColumnWidth(2),
-                            2: FlexColumnWidth(2),
-                            3: FlexColumnWidth(1.5),
-                            4: FlexColumnWidth(1.5),
-                            5: FlexColumnWidth(1.5),
-                          },
+                  columnWidths: isSponsors
+                      ? const {
+                          0: FlexColumnWidth(1),
+                          1: FlexColumnWidth(2),
+                          2: FlexColumnWidth(2),
+                          3: FlexColumnWidth(1.5),
+                          4: FlexColumnWidth(1),
+                          5: FlexColumnWidth(1),
+                          6: FlexColumnWidth(1.5),
+                          7: FlexColumnWidth(1.5),
+                        }
+                      : const {
+                          0: FlexColumnWidth(1),
+                          1: FlexColumnWidth(2),
+                          2: FlexColumnWidth(2),
+                          3: FlexColumnWidth(1.5),
+                          4: FlexColumnWidth(1.5),
+                          5: FlexColumnWidth(1.5),
+                        },
                   children: [
                     TableRow(
                       children: [
-                        _buildCell(context, data['sn']!),
-                        _buildCompanyInfoCell(data['company']!),
-                        _buildCell(context, data['email']!),
-                        _buildCell(context, data['country']!),
-                        if (isSponsors) _buildCell(context, data['ads']!),
-                        if (isSponsors) _buildCell(context, data['price']!),
-                        _buildCell(context, data['lastActive']!),
-                        _buildCell(context, data['createdDate']!),
+                        _buildCell(context, (index + 1).toString()),
+                        _buildCompanyInfoCell(
+                          user.companyName ?? 'N/A',
+                          user.companyLogo,
+                        ),
+                        _buildCell(context, user.email),
+                        _buildCell(context, countryMap[user.country] ?? 'N/A'),
+                        if (isSponsors) _buildCell(context, 'N/A'),
+                        if (isSponsors) _buildCell(context, 'N/A'),
+                        _buildCell(context, lastActive),
+                        _buildCell(context, createdDate),
                       ],
                     ),
                   ],
                 ),
               );
-            }, childCount: companies.length),
+            }, childCount: filteredUsers.length),
           ),
         ],
       ),
@@ -223,7 +258,7 @@ class UsersPage extends StatelessWidget {
     );
   }
 
-  static Widget _buildCompanyInfoCell(String value) {
+  static Widget _buildCompanyInfoCell(String companyName, String? companyLogo) {
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 12),
       child: Row(
@@ -231,16 +266,24 @@ class UsersPage extends StatelessWidget {
           Container(
             width: 24,
             height: 24,
-            decoration: const BoxDecoration(
-              color: Colors.grey,
+            decoration: BoxDecoration(
               shape: BoxShape.circle,
+              image: companyLogo != null
+                  ? DecorationImage(
+                      image: NetworkImage(companyLogo),
+                      fit: BoxFit.cover,
+                    )
+                  : null,
+              color: companyLogo == null ? Colors.grey : null,
             ),
-            child: const Icon(Icons.business, size: 16, color: Colors.white),
+            child: companyLogo == null
+                ? const Icon(Icons.business, size: 16, color: Colors.white)
+                : null,
           ),
           const SizedBox(width: 8),
           Expanded(
             child: Text(
-              value,
+              companyName,
               style: TextStyle(color: AppColors.cBlack),
               overflow: TextOverflow.ellipsis,
             ),
