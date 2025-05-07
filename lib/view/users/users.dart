@@ -74,7 +74,7 @@ class UsersPage extends StatelessWidget {
                       ),
                     ],
                   ),
-                  CseaechBar(
+                  CsearchBar(
                     hintText: "Search...",
                     onChanged: (value) {
                       userController.searchUsers(value); // Trigger search
