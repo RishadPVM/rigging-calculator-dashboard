@@ -11,7 +11,7 @@ class Navcontroller extends GetxController {
   List pages = [
     Dashboard(),
     const UsersPage(),
-    const CraneListPage(),
+     CraneListPage(),
     const AdsPage(),
     const SettingsPage(),
   ];

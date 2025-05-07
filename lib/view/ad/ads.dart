@@ -25,7 +25,7 @@ class AdsPage extends StatelessWidget {
             const Header(title: "Advertisements"),
             const Align(
               alignment: Alignment.centerRight,
-              child: CseaechBar(hintText: "Search"),
+              child: CsearchBar(hintText: "Search"),
             ),
             Expanded(
               child: Obx(

@@ -5,11 +5,11 @@ import 'package:flutter_svg/svg.dart';
 import '../utils/appcolors.dart';
 import '../utils/assets.dart';
 
-class CseaechBar extends StatelessWidget {
+class CsearchBar extends StatelessWidget {
   final String hintText;
   final Function(String)? onChanged;
   final double width;
-  const CseaechBar({
+  const CsearchBar({
     super.key, required this.hintText,
      this.onChanged,
      this.width=300,
