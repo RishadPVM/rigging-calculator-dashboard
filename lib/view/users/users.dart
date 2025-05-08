@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
+import 'package:leo_rigging_dashboard/utils/enum.dart';
 
 import '../../core/country_decode.dart';
 import '../../model/user_model.dart';
@@ -68,7 +69,7 @@ class UsersPage extends StatelessWidget {
                           children: [
                             Icon(Icons.campaign, size: 18),
                             SizedBox(width: 6),
-                            Text("Advertisers"),
+                            Text("Crane Sellers"),
                           ],
                         ),
                       ),
@@ -92,21 +93,21 @@ class UsersPage extends StatelessWidget {
                           children: [
                             _buildTable(
                               context,
-                              'Users',
-                              userController.filteredUsers, // Use filteredUsers
-                              false,
+                            
+                              userController.filteredUsers,
+                              UserRole.allUsers,
                             ),
                             _buildTable(
                               context,
-                              'Sponsors',
-                              userController.filteredUsers, // Use filteredUsers
-                              true,
+                           
+                              userController.filteredUsers.where((user) => user.sponsorAds.isNotEmpty).toList(), 
+                              UserRole.sponsors,
                             ),
                             _buildTable(
                               context,
-                              'Advertisers',
-                              userController.filteredUsers, // Use filteredUsers
-                              false,
+                            
+                              userController.filteredUsers.where((user) => user.cranes.isNotEmpty).toList(),
+                              UserRole.advertisers,
                             ),
                           ],
                         ),
@@ -121,21 +122,19 @@ class UsersPage extends StatelessWidget {
 
   static Widget _buildTable(
     BuildContext context,
-    String tabType,
+    
     List<UserModel> users,
-    bool isSponsors,
+    UserRole userRole,
   ) {
     // Filter users based on tabType if needed (e.g., Sponsors might have isPaymentStatus == true)
-    final filteredUsers = isSponsors
-        ? users.where((user) => user.isPaymentStatus).toList()
-        : users;
-
+   
+   
     final List<String> headers = [
-      'SN (${filteredUsers.length})',
+      'SN (${users.length})',
       'Company info',
       'E-mail',
       'Country',
-      if (isSponsors) ...['Ads', 'Price'],
+      if (userRole.name == UserRole.sponsors.name) ...['Ads', 'Price'],
       'Last active',
       'Created date',
     ];
@@ -147,7 +146,7 @@ class UsersPage extends StatelessWidget {
         slivers: [
           SliverToBoxAdapter(
             child: Table(
-              columnWidths: isSponsors
+              columnWidths: userRole.name == UserRole.sponsors.name
                   ? const {
                       0: FlexColumnWidth(1),
                       1: FlexColumnWidth(2),
@@ -192,7 +191,7 @@ class UsersPage extends StatelessWidget {
           ),
           SliverList(
             delegate: SliverChildBuilderDelegate((context, index) {
-              final user = filteredUsers[index];
+              final user = users[index];
               Color rowColor =
                   index.isEven ? AppColors.cWhite : AppColors.cGrey100;
 
@@ -206,7 +205,7 @@ class UsersPage extends StatelessWidget {
               return Container(
                 color: rowColor,
                 child: Table(
-                  columnWidths: isSponsors
+                  columnWidths: userRole.name == UserRole.sponsors.name
                       ? const {
                           0: FlexColumnWidth(1),
                           1: FlexColumnWidth(2),
@@ -235,8 +234,8 @@ class UsersPage extends StatelessWidget {
                         ),
                         _buildCell(context, user.email),
                         _buildCell(context, countryMap[user.country] ?? 'N/A'),
-                        if (isSponsors) _buildCell(context, 'N/A'),
-                        if (isSponsors) _buildCell(context, 'N/A'),
+                        if (userRole.name == UserRole.sponsors.name) _buildCell(context, user.sponsorAds.length.toString()),
+                        if (userRole.name == UserRole.sponsors.name) _buildCell(context, 'N/A'),
                         _buildCell(context, lastActive),
                         _buildCell(context, createdDate),
                       ],
@@ -244,7 +243,7 @@ class UsersPage extends StatelessWidget {
                   ],
                 ),
               );
-            }, childCount: filteredUsers.length),
+            }, childCount: users.length),
           ),
         ],
       ),

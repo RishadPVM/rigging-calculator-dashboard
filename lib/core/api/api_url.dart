@@ -6,4 +6,6 @@ class ApiUrl {
 
   static String getAllUser = "${baseurl}users";
   static String getAllAds = "${baseurl}sponsor/getAllAds";
+  static String getAllCategory = "${baseurl}crane/category/all";
+  static String getAllBrand = "${baseurl}crane/allBrand";
 }
