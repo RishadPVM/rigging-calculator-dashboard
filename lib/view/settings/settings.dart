@@ -20,7 +20,11 @@ class SettingsPage extends StatelessWidget {
             SizedBox(height: 20),
             Align(
               alignment: Alignment.topRight,
-              child: ElevatedButton(onPressed: (){}, child: Text("Create Subscription"))),
+              child: ElevatedButton(
+                onPressed: () {},
+                child: Text("Create Subscription"),
+              ),
+            ),
             SizedBox(height: 20),
             Row(
               spacing: 16,
@@ -59,8 +63,7 @@ class SubscrptionSeeingCard extends StatelessWidget {
   Widget build(BuildContext context) {
     return Flexible(
       child: GestureDetector(
-        onTap: () {
-        },
+        onTap: () {},
         child: Container(
           height: 260,
           width: 200,
@@ -83,7 +86,7 @@ class SubscrptionSeeingCard extends StatelessWidget {
                       AppColors.cPrimary,
                       BlendMode.srcIn,
                     ),
-        
+
                     fit: BoxFit.cover,
                     height: 48,
                     width: 48,

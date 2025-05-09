@@ -44,7 +44,7 @@ class AdsPage extends StatelessWidget {
                           return GestureDetector(
                             onTap: () {
                               // Pass the selected ad to AdDetails
-                              navController.overlappingNav(AdDetails());
+                              navController.overlappingNav(AdDetails(ad: ad,));
                             },
                             child: Container(
                               decoration: BoxDecoration(
@@ -101,7 +101,7 @@ class AdsPage extends StatelessWidget {
                                     ),
                                     const SizedBox(height: 8),
                                     Text(
-                                      "${ad.readUsers.length} Website views",
+                                      "${ad.readUsers.length} views"  "${ad.clickUsers.length} Website views" ,
                                       overflow: TextOverflow.ellipsis,
                                       textAlign: TextAlign.start,
                                       style: Theme.of(context).textTheme.bodySmall,
