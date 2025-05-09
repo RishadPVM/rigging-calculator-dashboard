@@ -126,9 +126,8 @@ class UsersPage extends StatelessWidget {
     List<UserModel> users,
     UserRole userRole,
   ) {
-    // Filter users based on tabType if needed (e.g., Sponsors might have isPaymentStatus == true)
-   
-   
+  
+  
     final List<String> headers = [
       'SN (${users.length})',
       'Company info',

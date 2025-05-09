@@ -1,12 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:leo_rigging_dashboard/utils/appcolors.dart';
+import 'package:leo_rigging_dashboard/model/ad_model.dart';
 
+import '../../utils/appcolors.dart';
+import '../../widget/count_card.dart';
 import '../../widget/header.dart';
 import '../nav/controller/navcontroller.dart';
 
 class AdDetails extends StatelessWidget {
-  const AdDetails({super.key});
+  final AdModel ad;
+  const AdDetails({super.key, required this.ad});
 
   @override
   Widget build(BuildContext context) {
@@ -16,6 +19,8 @@ class AdDetails extends StatelessWidget {
         child: Padding(
           padding: EdgeInsets.all(24.0),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Row(
                 children: [
@@ -34,6 +39,8 @@ class AdDetails extends StatelessWidget {
                 child: Padding(
                   padding: const EdgeInsets.all(24.0),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Expanded(
                         child: Column(
@@ -44,75 +51,109 @@ class AdDetails extends StatelessWidget {
                               child: ClipRRect(
                                 borderRadius: BorderRadius.circular(6),
                                 child: Image.network(
-                                  "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcTrm8FbBCkf8oElWjAdJDoyRZ8IqL8dCTNvBw&s",
+                                  ad.image,
                                   fit: BoxFit.cover,
                                 ),
                               ),
                             ),
                             SizedBox(height: 20),
-                            Container(
-                              height: 340,
-                              color: AppColors.cGrey100,
-                              width: double.infinity,
-                              child: CustomLineChart(
-                                greenLineData: [
-                                  Offset(0, 0),
-                                  Offset(1, 1000),
-                                  Offset(2, 2000),
-                                  Offset(3, 1500),
-                                  Offset(4, 2500),
-                                  Offset(5, 3000),
-                                  Offset(6, 2000),
-                                  Offset(7, 2500),
-                                  Offset(8, 1500),
-                                  Offset(9, 2000),
-                                  Offset(10, 1000),
-                                  Offset(11, 3000),
-                                ],
-                                orangeLineData: [
-                                  Offset(0, 0),
-                                  Offset(1, 1000),
-                                  Offset(2, 2000),
-                                  Offset(3, 1500),
-                                  Offset(4, 2500),
-                                  Offset(5, 3000),
-                                  Offset(6, 2000),
-                                  Offset(7, 2500),
-                                  Offset(8, 1500),
-                                  Offset(9, 2000),
-                                  Offset(10, 1000),
-                                  Offset(11, 3000),
-                                ],
-                                minX: 0,
-                                maxX: 11,
-                                minY: 0,
-                                maxY: 3000,
-                                xLabels: const [
-                                  'Jan',
-                                  'Feb',
-                                  'Mar',
-                                  'Apr',
-                                  'May',
-                                  'Jun',
-                                  'Jul',
-                                  'Aug',
-                                  'Sep',
-                                  'Oct',
-                                  'Nov',
-                                  'Dec',
-                                ],
-                                yLabels: [500, 1000, 1500, 2000, 2500, 3000],
-                                greenLineColor: Colors.green,
-                                orangeLineColor: Colors.orange,
-                              ),
+
+                            // Container(
+                            //   height: 340,
+                            //   color: AppColors.cGrey100,
+                            //   width: double.infinity,
+                            //   child: CustomLineChart(
+                            //     greenLineData: [
+                            //       Offset(0, 0),
+                            //       Offset(1, 1000),
+                            //       Offset(2, 2000),
+                            //       Offset(3, 1500),
+                            //       Offset(4, 2500),
+                            //       Offset(5, 3000),
+                            //       Offset(6, 2000),
+                            //       Offset(7, 2500),
+                            //       Offset(8, 1500),
+                            //       Offset(9, 2000),
+                            //       Offset(10, 1000),
+                            //       Offset(11, 3000),
+                            //     ],
+                            //     orangeLineData: [
+                            //       Offset(0, 0),
+                            //       Offset(1, 1000),
+                            //       Offset(2, 2000),
+                            //       Offset(3, 1500),
+                            //       Offset(4, 2500),
+                            //       Offset(5, 3000),
+                            //       Offset(6, 2000),
+                            //       Offset(7, 2500),
+                            //       Offset(8, 1500),
+                            //       Offset(9, 2000),
+                            //       Offset(10, 1000),
+                            //       Offset(11, 3000),
+                            //     ],
+                            //     minX: 0,
+                            //     maxX: 11,
+                            //     minY: 0,
+                            //     maxY: 3000,
+                            //     xLabels: const [
+                            //       'Jan',
+                            //       'Feb',
+                            //       'Mar',
+                            //       'Apr',
+                            //       'May',
+                            //       'Jun',
+                            //       'Jul',
+                            //       'Aug',
+                            //       'Sep',
+                            //       'Oct',
+                            //       'Nov',
+                            //       'Dec',
+                            //     ],
+                            //     yLabels: [500, 1000, 1500, 2000, 2500, 3000],
+                            //     greenLineColor: Colors.green,
+                            //     orangeLineColor: Colors.orange,
+                            //   ),
+                            // ),
+                          ],
+                        ),
+                      ),
+                      const SizedBox(width: 16),
+                      Expanded(
+                        child: Column(
+                          spacing: 16,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+
+                          children: [
+                            Row(
+                              children: [
+                                CountCard(
+                                  count: ad.readUsers.length.toString(),
+                                  title: "Total Views",
+                                ),
+                                SizedBox(width: 16),
+                                CountCard(
+                                  count: ad.clickUsers.length.toString(),
+                                  title: "Website Views",
+                                ),
+                              ],
+                            ),
+                            Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  ad.title,
+                                  style: Theme.of(context).textTheme.bodyLarge,
+                                ),
+                                Text(
+                                  ad.webUrl,
+                                  style: Theme.of(context).textTheme.bodySmall
+                                      ?.copyWith(color: AppColors.cPrimary),
+                                ),
+                              ],
                             ),
                           ],
                         ),
                       ),
-                      Expanded(child: Column(children: [
-                          
-                        ],
-                      )),
                     ],
                   ),
                 ),
