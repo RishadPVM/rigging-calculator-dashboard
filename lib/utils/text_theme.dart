@@ -24,6 +24,12 @@ class CTextTheme {
       fontWeight: FontWeight.w600,
       color: AppColors.cBlack,
     ),
+     headlineSmall: TextStyle(
+       overflow:  TextOverflow.ellipsis,
+      fontSize: 20,
+      fontWeight: FontWeight.w600,
+      color: AppColors.cBlack,
+    ),
     bodyLarge: TextStyle(
        overflow:  TextOverflow.ellipsis,
       fontSize: 16,
