@@ -4,8 +4,10 @@ import 'package:leo_rigging_dashboard/utils/appcolors.dart';
 import 'package:leo_rigging_dashboard/utils/assets.dart';
 import 'package:leo_rigging_dashboard/widget/header.dart';
 
-class SettingsPage extends StatelessWidget {
-  const SettingsPage({super.key});
+class PaymentsPage
+ extends StatelessWidget {
+  const PaymentsPage
+  ({super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -16,13 +18,14 @@ class SettingsPage extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Header(title: "Settings"),
+            Header(title: "Payments"),
             SizedBox(height: 20),
             Align(
               alignment: Alignment.topRight,
-              child: ElevatedButton(
-                onPressed: () {},
-                child: Text("Create Subscription"),
+              child: ElevatedButton.icon(
+               onPressed: (){},
+               icon: Icon(Icons.add),
+               label: Text("Create "),
               ),
             ),
             SizedBox(height: 20),
