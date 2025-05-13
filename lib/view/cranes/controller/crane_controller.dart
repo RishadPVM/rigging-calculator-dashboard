@@ -2,10 +2,9 @@ import 'dart:developer';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:image/image.dart' as img;
+import 'package:image_picker/image_picker.dart';
 import 'package:leo_rigging_dashboard/model/category_model.dart';
-import 'dart:io';
 
 import '../../../core/api/api_service.dart';
 import '../../../core/api/api_url.dart';
@@ -21,7 +20,7 @@ class CraneController extends GetxController {
   var brands = <BrandModel>[].obs;
   ApiService apiService = ApiService();
   final RxBool isLoading = true.obs;
-  final double _requiredAspectRatio = 25 / 14;
+  RxBool isAspectRatioIssue = false.obs;
 
   @override
   void onInit() {
@@ -65,47 +64,34 @@ class CraneController extends GetxController {
     selectedImage.value = null;
   }
 
-  Future<void> pickAndValidateImage(BuildContext context) async {
-    try {
-      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-      if (image == null) return;
+  Future<void> pickAndValidateImage(bool isBrand) async {
+      final double aspectRatio = isBrand ? 2.35 / 1 : 16 / 9;
+      isAspectRatioIssue(false);
+  try {
+    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+    if (image == null) return;
 
-      // Read image and check aspect ratio
-      final bytes = await image.readAsBytes();
-      final decodedImage = img.decodeImage(bytes);
-      if (decodedImage == null) {
-        _showError(context, 'Unable to process image');
-        return;
+    final bytes = await image.readAsBytes();
+    final decodedImage = img.decodeImage(bytes);
+    if (decodedImage == null) {
+      if (!Get.isSnackbarOpen) {
+        Get.snackbar('Error', 'Unable to process image');
       }
-
-      final currentAspectRatio = decodedImage.width / decodedImage.height;
-      XFile? processedImage = image;
-
-      // Check if aspect ratio is within 5% of required 25:14
-      if ((currentAspectRatio - _requiredAspectRatio).abs() > 0.05) {
-        // Crop image to 25:14
-        final targetWidth = decodedImage.height * _requiredAspectRatio;
-        final cropX = (decodedImage.width - targetWidth) / 2;
-        final croppedImage = img.copyCrop(
-          decodedImage,
-          x: cropX.round(),
-          y: 0,
-          width: targetWidth.round(),
-          height: decodedImage.height,
-        );
-
-        // Save cropped image to temporary file
-        final tempDir = Directory.systemTemp;
-        final tempFile = File('${tempDir.path}/cropped_${image.name}');
-        await tempFile.writeAsBytes(img.encodePng(croppedImage));
-        processedImage = XFile(tempFile.path);
-      }
-
-      selectedImage.value = processedImage;
-    } catch (e) {
-      _showError(context, 'Error processing image: $e');
+      return;
     }
+
+    final currentAspectRatio = decodedImage.width / decodedImage.height;
+
+    if ((currentAspectRatio - aspectRatio).abs() > 0.05) {
+      isAspectRatioIssue(true);
+      return;
+    }
+
+    selectedImage.value = image;
+  } catch (e) {
+   isAspectRatioIssue(false);
   }
+}
 
   void handleSubmit(
     BuildContext context,

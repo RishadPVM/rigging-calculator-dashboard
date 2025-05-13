@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
-import 'package:leo_rigging_dashboard/core/api/api_url.dart';
 
 class ApiService {
   // Singleton instance

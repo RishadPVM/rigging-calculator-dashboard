@@ -1,4 +1,5 @@
 import 'dart:io';
+
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
@@ -23,7 +24,7 @@ class BrandCategoryDialoge extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final CraneController controller = Get.find<CraneController>();
-    final double requiredAspectRatio = 25 / 14;
+    final double requiredAspectRatio = isbrand ? 2.35 / 1 : 16 / 9;
 
     return AlertDialog(
       backgroundColor: AppColors.cWhite,
@@ -52,61 +53,66 @@ class BrandCategoryDialoge extends StatelessWidget {
       ),
       content: SizedBox(
         width: 280,
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            GestureDetector(
-              onTap: () => controller.pickAndValidateImage(context),
-              child: Container(
-                width: double.maxFinite,
-                height: 200,
-                decoration: BoxDecoration(
-                  color: AppColors.cGrey300,
-                  borderRadius: BorderRadius.circular(4),
-                  border: Border.all(
-                    color: const Color.fromARGB(255, 213, 213, 213),
+        child: Obx(
+          () =>  Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+             GestureDetector(
+                  onTap: () => controller.pickAndValidateImage(isbrand),
+                  child: Container(
+                    width: double.maxFinite,
+                    height: 200,
+                    decoration: BoxDecoration(
+                      color: AppColors.cGrey300,
+                      borderRadius: BorderRadius.circular(4),
+                      border: Border.all(
+                        color: controller.isAspectRatioIssue.value ? AppColors.cPrimary :const Color.fromARGB(255, 213, 213, 213),
+                      ),
+                    ),
+                    child: Obx(() => controller.selectedImage.value != null
+                        ? AspectRatio(
+                            aspectRatio: requiredAspectRatio,
+                            child: Image.file(
+                              File(controller.selectedImage.value!.path),
+                              fit: BoxFit.contain,
+                            ),
+                          )
+                        : iscreate
+                            ? Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  const Icon(Icons.add_a_photo_outlined),
+                                  const SizedBox(height: 8),
+                                  Text(
+                                    "Upload Image (Aspect Ratio ${isbrand ? '2.35:1 ' : '16:10'})",
+                                    overflow: TextOverflow.ellipsis,
+                                    style: Theme.of(context).textTheme.bodySmall,
+                                  ),
+                                ],
+                              )
+                            : image != null
+                                ? AspectRatio(
+                                    aspectRatio: requiredAspectRatio,
+                                    child: Image.asset(
+                                      image!,
+                                      fit: BoxFit.contain,
+                                    ),
+                                  )
+                                : const Center(child: Icon(Icons.image_not_supported))),
                   ),
                 ),
-                child: Obx(() => controller.selectedImage.value != null
-                    ? AspectRatio(
-                        aspectRatio: requiredAspectRatio,
-                        child: Image.file(
-                          File(controller.selectedImage.value!.path),
-                          fit: BoxFit.contain,
-                        ),
-                      )
-                    : iscreate
-                        ? Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            children: [
-                              const Icon(Icons.add_a_photo_outlined),
-                              const SizedBox(height: 8),
-                              Text(
-                                "Upload Image (Aspect Ratio 25:14)",
-                                overflow: TextOverflow.ellipsis,
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ),
-                            ],
-                          )
-                        : image != null
-                            ? AspectRatio(
-                                aspectRatio: requiredAspectRatio,
-                                child: Image.asset(
-                                  image!,
-                                  fit: BoxFit.contain,
-                                ),
-                              )
-                            : const Center(child: Icon(Icons.image_not_supported))),
+                if(controller.isAspectRatioIssue.value)
+                Text("upload an image with $requiredAspectRatio aspect ratio", style: TextStyle(color: Colors.red,fontSize: 12),),
+              const SizedBox(height: 8),
+              CTextField(
+                labelText: isbrand ? "Brand name" : "Category name",
+                suffixIcon: Icons.abc_outlined,
+                controller: controller.nameController,
               ),
-            ),
-            const SizedBox(height: 8),
-            CTextField(
-              labelText: isbrand ? "Brand name" : "Category name",
-              suffixIcon: Icons.abc_outlined,
-              controller: controller.nameController,
-            ),
-          ],
+            ],
+          ),
         ),
       ),
       actions: [
