@@ -58,7 +58,7 @@ class SidebarTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Navcontroller controller = Get.find<Navcontroller>();
 
-    List<String> names = ["Dashboard","Users", "Cranes", "Advertisements", "Settings"];
+    List<String> names = ["Dashboard","Users", "Cranes", "Advertisements", "Payments"];
 
     List<String> icons = [
       Assets.dashBoard,

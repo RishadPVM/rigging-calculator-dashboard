@@ -12,7 +12,12 @@ class DashboardCountBox extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    
+    final List<String> graph = [
+      Assets.graph,
+      Assets.graph1,
+      Assets.graph2,
+      Assets.graph4,
+    ];
     return Row(
       children: List.generate(
         dataCount.length,
@@ -47,7 +52,7 @@ class DashboardCountBox extends StatelessWidget {
                   ),
                 ),
                 const Spacer(),
-                Image.asset(Assets.graph2),
+                Image.asset(graph[index]),
               ],
             ),
           ),
@@ -55,4 +60,4 @@ class DashboardCountBox extends StatelessWidget {
       ),
     );
   }
-}
+} 
