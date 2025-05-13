@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/core/api/api_service.dart';
 import 'package:leo_rigging_dashboard/core/api/api_url.dart';
-import 'package:leo_rigging_dashboard/core/country_decode.dart';
+import 'package:leo_rigging_dashboard/utils/country_decode.dart';
 
 import '../../../model/user_model.dart';
 
