@@ -1,5 +1,5 @@
 enum UserRole {
   allUsers,
   sponsors,
-  advertisers,
+  craneSeller,
 }

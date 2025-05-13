@@ -24,9 +24,7 @@ class CraneDetails extends StatelessWidget {
                 child: Row(
                   children: [
                     IconButton(
-                      onPressed: () {
-                        controller.overlappingNavClose();
-                      },
+                      onPressed: () => controller.overlappingNavClose(),
                       icon: Icon(Icons.arrow_back_ios_new),
                     ),
                     const SizedBox(width: 16),
@@ -83,7 +81,7 @@ class CraneDetails extends StatelessWidget {
                           ),
                           SizedBox(height: 16),
                           Text(
-                            "Terex Challenger 3160",
+                            "Terex Challenger 3160",
                             style: Theme.of(context).textTheme.bodyLarge,
                           ),
                           Text(

@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
-import 'package:leo_rigging_dashboard/view/ad/ad_details.dart';
+import 'package:leo_rigging_dashboard/view/advertising/ad_details.dart';
 import 'package:leo_rigging_dashboard/widget/header.dart';
 
 import '../../widget/c_search_bar.dart';

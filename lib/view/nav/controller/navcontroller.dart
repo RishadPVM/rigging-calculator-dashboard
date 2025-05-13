@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/view/dashboard/dashboard.dart';
 
-import '../../ad/ads.dart';
+import '../../advertising/ads.dart';
 import '../../cranes/cranes_list.dart';
 import '../../settings/settings.dart';
 import '../../users/users.dart';
