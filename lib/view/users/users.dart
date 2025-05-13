@@ -3,7 +3,7 @@ import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leo_rigging_dashboard/utils/enum.dart';
 
-import '../../core/country_decode.dart';
+import '../../utils/country_decode.dart';
 import '../../model/user_model.dart';
 import '../../utils/appcolors.dart';
 import '../../widget/c_search_bar.dart';
