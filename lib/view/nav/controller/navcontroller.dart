@@ -4,7 +4,7 @@ import 'package:leo_rigging_dashboard/view/dashboard/dashboard.dart';
 
 import '../../ad/ads.dart';
 import '../../cranes/cranes_list.dart';
-import '../../settings/settings.dart';
+import '../../payments/payments.dart';
 import '../../users/users.dart';
 
 class Navcontroller extends GetxController {
@@ -13,7 +13,7 @@ class Navcontroller extends GetxController {
     const UsersPage(),
      CraneListPage(),
     const AdsPage(),
-    const SettingsPage(),
+    const PaymentsPage(),
   ];
 
   late Rx<Widget> selectedBody = Rx<Widget>(pages[0]);
