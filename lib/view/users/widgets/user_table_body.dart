@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:leo_rigging_dashboard/core/country_decode.dart';
 import 'package:leo_rigging_dashboard/model/user_model.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
-import 'package:leo_rigging_dashboard/utils/country_decode.dart';
 import 'package:leo_rigging_dashboard/utils/enum.dart';
 
 class UserTable extends StatelessWidget {
