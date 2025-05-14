@@ -1,4 +1,5 @@
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -25,14 +26,13 @@ class CraneController extends GetxController {
   @override
   void onInit() {
     super.onInit();
-    // Reset controller state when dialog opens for create mode
     nameController.text = "";
     selectedImage.value = null;
     fetchAllBrand();
     fetchAllCtegory();
   }
 
-   Future<void> fetchAllBrand() async {
+  Future<void> fetchAllBrand() async {
     final response = await apiService.get(ApiUrl.getAllBrand);
     brands.assignAll(
       (response['brands'] as List)
@@ -41,6 +41,30 @@ class CraneController extends GetxController {
     );
     log('fetched: ${category.length}');
     isLoading.value = false;
+  }
+
+  Future<void> uploadBrandAndCategory(
+    bool isbrand,
+    Map<String, String> name,
+    Map<String, File> img,
+  ) async {
+    await apiService.postFormData(
+      isbrand ? ApiUrl.postBrand : ApiUrl.postCategory,
+      fields: name,
+      files: img,
+    );
+  }
+  Future<void> updateBrandAndCategory(
+    bool isbrand,
+    String id,
+    Map<String, String> name,
+    Map<String, File> img,
+  ) async {
+    await apiService.postFormData(
+      isbrand ?  "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
+      fields: name,
+      files: img,
+    );
   }
 
   Future<void> fetchAllCtegory() async {
@@ -65,33 +89,33 @@ class CraneController extends GetxController {
   }
 
   Future<void> pickAndValidateImage(bool isBrand) async {
-      final double aspectRatio = isBrand ? 2.35 / 1 : 16 / 9;
-      isAspectRatioIssue(false);
-  try {
-    final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
-    if (image == null) return;
+    final double aspectRatio = isBrand ? 2.35 / 1 : 1 / 1;
+    isAspectRatioIssue(false);
+    try {
+      final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
+      if (image == null) return;
 
-    final bytes = await image.readAsBytes();
-    final decodedImage = img.decodeImage(bytes);
-    if (decodedImage == null) {
-      if (!Get.isSnackbarOpen) {
-        Get.snackbar('Error', 'Unable to process image');
+      final bytes = await image.readAsBytes();
+      final decodedImage = img.decodeImage(bytes);
+      if (decodedImage == null) {
+        if (!Get.isSnackbarOpen) {
+          Get.snackbar('Error', 'Unable to process image');
+        }
+        return;
       }
-      return;
+
+      final currentAspectRatio = decodedImage.width / decodedImage.height;
+
+      if ((currentAspectRatio - aspectRatio).abs() > 0.05) {
+        isAspectRatioIssue(true);
+        return;
+      }
+
+      selectedImage.value = image;
+    } catch (e) {
+      isAspectRatioIssue(false);
     }
-
-    final currentAspectRatio = decodedImage.width / decodedImage.height;
-
-    if ((currentAspectRatio - aspectRatio).abs() > 0.05) {
-      isAspectRatioIssue(true);
-      return;
-    }
-
-    selectedImage.value = image;
-  } catch (e) {
-   isAspectRatioIssue(false);
   }
-}
 
   void handleSubmit(
     BuildContext context,
@@ -109,13 +133,17 @@ class CraneController extends GetxController {
       return;
     }
 
-    final result = {
-      'name': nameController.text,
-      'image': selectedImage.value?.path ?? existingImage,
-      'isBrand': isbrand,
-    };
+    final feilds =
+        isbrand
+            ? {'brandName': nameController.text}
+            : {'categoryName': nameController.text};
 
-    Navigator.of(context).pop(result);
+    final file = File(selectedImage.value!.path);
+    final fileImage = isbrand ? {'imageUrl': file} : {'categoryimageUrl': file};
+    uploadBrandAndCategory(isbrand, feilds, fileImage);
+    fetchAllCtegory();
+
+    Navigator.of(context).pop();
   }
 
   void _showError(BuildContext context, String message) {
@@ -125,7 +153,7 @@ class CraneController extends GetxController {
   }
 
   @override
-  void onClose() {
+  void onClose() { 
     nameController.dispose();
     super.onClose();
   }

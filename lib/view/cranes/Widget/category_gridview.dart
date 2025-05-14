@@ -29,41 +29,46 @@ class CategoryGridView extends StatelessWidget {
         itemCount: controller.category.length,
         itemBuilder: (context, index) {
           final category = controller.category[index];
-          return Container(
-            decoration: BoxDecoration(
-              border: Border.all(
-                color: const Color.fromARGB(255, 213, 213, 213),
+          return GestureDetector(
+            onTap: () {
+              
+            },
+            child: Container(
+              decoration: BoxDecoration(
+                border: Border.all(
+                  color: const Color.fromARGB(255, 213, 213, 213),
+                ),
+                borderRadius: BorderRadius.circular(4),
               ),
-              borderRadius: BorderRadius.circular(4),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                Image.network(
-                  category.categoryImageUrl,
-                  height: 100,
-                  width: 100,
-                  fit: BoxFit.contain,
-                  errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
-                ),
-                const SizedBox(height: 8),
-                Text(
-                  category.categoryName,
-                  overflow: TextOverflow.ellipsis,
-                  style: Theme.of(context).textTheme.bodyLarge,
-                ),
-                const SizedBox(height: 4),
-                Transform.scale(
-                  scale: 0.8,
-                  child: Switch(
-                    activeColor: Colors.green,
-                    value: true,
-                    onChanged: (value) {
-                    },
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Image.network(
+                    category.categoryImageUrl,
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.contain,
+                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
                   ),
-                ),
-              ],
+                  const SizedBox(height: 8),
+                  Text(
+                    category.categoryName,
+                    overflow: TextOverflow.ellipsis,
+                    style: Theme.of(context).textTheme.bodyLarge,
+                  ),
+                  const SizedBox(height: 4),
+                  Transform.scale(
+                    scale: 0.8,
+                    child: Switch(
+                      activeColor: Colors.green,
+                      value: true,
+                      onChanged: (value) {
+                      },
+                    ),
+                  ),
+                ],
+              ),
             ),
           );
         },
