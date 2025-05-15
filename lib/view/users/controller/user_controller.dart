@@ -28,8 +28,15 @@ class UserController extends GetxController {
           .map((json) => UserModel.fromJson(json))
           .toList(),
     );
+
+    // Sort users by lastActive (descending: most recent first)
+    users.sort((a, b) {
+      final aLastActive = (a.lastActiveAt ?? '').toString();
+      final bLastActive = (b.lastActiveAt ?? '').toString();
+      return bLastActive.compareTo(aLastActive);
+    });
+
     filteredUsers.assignAll(users);
-    log('Users fetched: ${users.length}');
     isLoading.value = false;
   }
 
@@ -43,13 +50,15 @@ class UserController extends GetxController {
         users.where((user) {
           final companyName = user.companyName?.toLowerCase() ?? '';
           final email = user.email.toLowerCase();
-          final country = countryMap[user.country]!.toLowerCase();
+          final countryKey = user.country;
+          final country = countryMap[countryKey] != null
+              ? countryMap[countryKey]!.toLowerCase()
+              : '';
           return companyName.contains(searchQuery.value) ||
               email.contains(searchQuery.value) ||
               country.contains(searchQuery.value);
         }).toList(),
       );
     }
-    log('Filtered users: ${filteredUsers.length}');
   }
 }
