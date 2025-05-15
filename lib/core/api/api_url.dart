@@ -8,7 +8,7 @@ class ApiUrl {
   static String getDashboardData="${baseurl}app/getAppAnalytics";
   static String getAllAds = "${baseurl}sponsor/getAllAds";
   static String getAllCategory = "${baseurl}crane/category/all";
-  static String getAllBrand = "${baseurl}crane/allBrand";
+  static String getAllBrand = "${baseurl}crane/brand/all";
   static String postBrand = "${baseurl}crane/brand/";
   static String postCategory = "${baseurl}crane/category/create";
     static String editBrand = "${baseurl}crane/brand/";

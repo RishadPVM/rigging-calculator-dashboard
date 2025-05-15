@@ -10,6 +10,7 @@ import '../controller/crane_controller.dart';
 class BrandCategoryDialoge extends StatelessWidget {
   final String? image;
   final String? name;
+  final String? id;
   final bool iscreate;
   final bool isbrand;
 
@@ -17,13 +18,17 @@ class BrandCategoryDialoge extends StatelessWidget {
     super.key,
     this.image,
     this.name,
+    this.id,
     required this.iscreate,
-    required this.isbrand,
+    required this.isbrand, 
   });
 
   @override
   Widget build(BuildContext context) {
     final CraneController controller = Get.find<CraneController>();
+    if (!iscreate) {
+      controller.nameController.text = name!;
+    }
     final double requiredAspectRatio = isbrand ? 2.35 / 1 : 1 / 1;
 
     return AlertDialog(
@@ -78,7 +83,8 @@ class BrandCategoryDialoge extends StatelessWidget {
                         controller.selectedImage.value != null
                             ? AspectRatio(
                               aspectRatio: requiredAspectRatio,
-                              child: Image.file(
+                              child: 
+                              Image.file(
                                 File(controller.selectedImage.value!.path),
                                 fit: BoxFit.contain,
                               ),
@@ -100,7 +106,7 @@ class BrandCategoryDialoge extends StatelessWidget {
                             : image != null
                             ? AspectRatio(
                               aspectRatio: requiredAspectRatio,
-                              child: Image.asset(image!, fit: BoxFit.contain),
+                              child: Image.network(image!, fit: BoxFit.contain),
                             )
                             : const Center(
                               child: Icon(Icons.image_not_supported),
@@ -126,7 +132,11 @@ class BrandCategoryDialoge extends StatelessWidget {
       actions: [
         ElevatedButton(
           onPressed:
-              () => controller.handleSubmit(context, iscreate, isbrand, image),
+              () {
+               iscreate?
+               controller.handleSubmit(context, iscreate, isbrand, image):
+               controller.handleUpdate(context, id!, iscreate, isbrand);
+              } ,
           child: Text(iscreate ? "Create" : "Update"),
         ),
       ],
