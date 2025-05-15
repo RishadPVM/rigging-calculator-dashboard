@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/view/cranes/Widget/brand_category_dialoge.dart';
 
 import '../controller/crane_controller.dart';
 
@@ -31,7 +32,17 @@ class CategoryGridView extends StatelessWidget {
           final category = controller.category[index];
           return GestureDetector(
             onTap: () {
-              
+              showDialog(
+                context: context,
+                builder:
+                    (context) => BrandCategoryDialoge(
+                      iscreate: false,
+                      isbrand: false,
+                      image: category.categoryImageUrl,
+                      name: category.categoryName,
+                      id: category.id,
+                    ),
+              );
             },
             child: Container(
               decoration: BoxDecoration(
@@ -49,7 +60,9 @@ class CategoryGridView extends StatelessWidget {
                     height: 100,
                     width: 100,
                     fit: BoxFit.contain,
-                    errorBuilder: (context, error, stackTrace) => const Icon(Icons.image_not_supported),
+                    errorBuilder:
+                        (context, error, stackTrace) =>
+                            const Icon(Icons.image_not_supported),
                   ),
                   const SizedBox(height: 8),
                   Text(
@@ -62,8 +75,9 @@ class CategoryGridView extends StatelessWidget {
                     scale: 0.8,
                     child: Switch(
                       activeColor: Colors.green,
-                      value: true,
+                      value: controller.isSwitched.value,
                       onChanged: (value) {
+                        controller.toggleSwitch(value);
                       },
                     ),
                   ),

@@ -44,6 +44,44 @@ class ApiService {
       throw _handleError(e);
     }
   }
+  
+  Future<dynamic> putFormData(
+  String url, {
+  Map<String, String>? fields,
+  Map<String, File>? files,
+  Map<String, String>? headers,
+}) async {
+  try {
+    final uri = Uri.parse(url);
+    final request = http.MultipartRequest('PUT', uri);
+
+    // Add headers
+    request.headers.addAll({
+      ..._defaultHeaders,
+      if (headers != null) ...headers,
+    });
+
+    // Add fields
+    if (fields != null) {
+      request.fields.addAll(fields);
+    }
+
+    // Add files
+    if (files != null) {
+      for (final entry in files.entries) {
+        final file = await http.MultipartFile.fromPath(entry.key, entry.value.path);
+        request.files.add(file);
+      }
+    }
+
+    final streamedResponse = await request.send();
+    final response = await http.Response.fromStream(streamedResponse);
+
+    return _handleResponse(response);
+  } catch (e) {
+    throw _handleError(e);
+  }
+}
 
 Future<dynamic> postFormData(
   String url, {

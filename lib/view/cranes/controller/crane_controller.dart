@@ -22,6 +22,7 @@ class CraneController extends GetxController {
   ApiService apiService = ApiService();
   final RxBool isLoading = true.obs;
   RxBool isAspectRatioIssue = false.obs;
+  var isSwitched = true.obs; 
 
   @override
   void onInit() {
@@ -32,11 +33,30 @@ class CraneController extends GetxController {
     fetchAllCtegory();
   }
 
+   void toggleSwitch(bool value) {
+    isSwitched.value = value;
+  }
+
+  
+
+
+ 
   Future<void> fetchAllBrand() async {
     final response = await apiService.get(ApiUrl.getAllBrand);
     brands.assignAll(
       (response['brands'] as List)
           .map((json) => BrandModel.fromJson(json))
+          .toList(),
+    );
+    log('fetched: ${brands.length}');
+    isLoading.value = false;
+  }
+
+   Future<void> fetchAllCtegory() async {
+    final response = await apiService.get(ApiUrl.getAllCategory);
+    category.assignAll(
+      (response['categories'] as List)
+          .map((json) => CategoryModel.fromJson(json))
           .toList(),
     );
     log('fetched: ${category.length}');
@@ -48,35 +68,49 @@ class CraneController extends GetxController {
     Map<String, String> name,
     Map<String, File> img,
   ) async {
-    await apiService.postFormData(
-      isbrand ? ApiUrl.postBrand : ApiUrl.postCategory,
-      fields: name,
-      files: img,
-    );
+    try {
+      await apiService.postFormData(
+        isbrand ? ApiUrl.postBrand : ApiUrl.postCategory,
+        fields: name,
+        files: img,
+      );
+    } catch (e) {
+      Exception("Somting Went Wrong");
+    } finally {
+      selectedImage(null);
+      nameController.text="";
+    }
   }
+
   Future<void> updateBrandAndCategory(
     bool isbrand,
     String id,
-    Map<String, String> name,
-    Map<String, File> img,
+    Map<String, String>? name,
+    Map<String, File>? img,
   ) async {
-    await apiService.postFormData(
-      isbrand ?  "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
-      fields: name,
-      files: img,
-    );
+    try {
+      
+      if (img==null) {
+        await apiService.putFormData(
+        isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
+        fields: name,
+      );
+      }else{
+        await apiService.putFormData(
+        isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
+        fields: name,
+        files: img,
+      );
+      }
+    } catch (e) {
+      Exception("Somting Went Wrong");
+    }finally{
+      selectedImage(null);
+      nameController.text="";
+    }
   }
 
-  Future<void> fetchAllCtegory() async {
-    final response = await apiService.get(ApiUrl.getAllCategory);
-    category.assignAll(
-      (response['categories'] as List)
-          .map((json) => CategoryModel.fromJson(json))
-          .toList(),
-    );
-    log('fetched: ${category.length}');
-    isLoading.value = false;
-  }
+ 
 
   void updateTabIndex(int index) {
     tabIndex.value = index;
@@ -140,7 +174,36 @@ class CraneController extends GetxController {
 
     final file = File(selectedImage.value!.path);
     final fileImage = isbrand ? {'imageUrl': file} : {'categoryimageUrl': file};
+
     uploadBrandAndCategory(isbrand, feilds, fileImage);
+    fetchAllCtegory();
+
+    Navigator.of(context).pop();
+  }
+
+  void handleUpdate(
+    BuildContext context,
+    String id,
+    bool iscreate,
+    bool isbrand,
+  ) {
+    final feilds =isbrand
+            ? {'brandName': nameController.text}
+            : {'categoryName': nameController.text};
+
+    Map<String, File>? fileImage;
+    if (selectedImage.value != null) {
+      final file = File(selectedImage.value!.path);
+      fileImage = isbrand ? {'imageUrl': file} : {'categoryimageUrl': file};
+    } else {
+      fileImage = null;
+    }
+
+    
+   
+      updateBrandAndCategory(isbrand, id, feilds, fileImage);
+    
+    
     fetchAllCtegory();
 
     Navigator.of(context).pop();
@@ -153,7 +216,7 @@ class CraneController extends GetxController {
   }
 
   @override
-  void onClose() { 
+  void onClose() {
     nameController.dispose();
     super.onClose();
   }

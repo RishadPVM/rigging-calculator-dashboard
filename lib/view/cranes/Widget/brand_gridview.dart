@@ -44,15 +44,15 @@ class BrandGridview extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Image.network(
-                  brand.image,
-                  height: 100,
-                  width: 100,
-                  fit: BoxFit.contain,
-                  errorBuilder:
-                      (context, error, stackTrace) =>
-                          const Icon(Icons.image_not_supported),
-                ),
+                  Image.network(
+                    brand.imageUrl,
+                    height: 100,
+                    width: 100,
+                    fit: BoxFit.contain,
+                    errorBuilder:
+                        (context, error, stackTrace) =>
+                            const Icon(Icons.image_not_supported),
+                  ),
                 Text(
                   brand.brandName,
                   overflow: TextOverflow.ellipsis,
