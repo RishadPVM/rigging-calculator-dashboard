@@ -14,8 +14,9 @@ class AdController extends GetxController {
 
   @override
   void onInit() {
-    super.onInit();
     fetchAds();
+    super.onInit();
+    
   }
 
   Future<void> fetchAds() async {
