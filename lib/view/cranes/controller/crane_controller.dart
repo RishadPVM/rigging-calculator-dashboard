@@ -22,25 +22,51 @@ class CraneController extends GetxController {
   ApiService apiService = ApiService();
   final RxBool isLoading = true.obs;
   RxBool isAspectRatioIssue = false.obs;
-  var isSwitched = true.obs; 
+  var isSwitched = true.obs;
+
+  var filteredCategory = <CategoryModel>[].obs;
+  var filteredBrand = <BrandModel>[].obs;
+  final RxString searchQuery = ''.obs;
 
   @override
   void onInit() {
     super.onInit();
     nameController.text = "";
     selectedImage.value = null;
-    fetchAllBrand();
-    fetchAllCtegory();
+    fetchAllData();
   }
 
-   void toggleSwitch(bool value) {
+  Future<void> fetchAllData() async {
+    await Future.wait([fetchAllBrand(), fetchAllCtegory()]);
+    filteredCategory.assignAll(category);
+    filteredBrand.assignAll(brands);
+  }
+
+  void toggleSwitch(bool value) {
     isSwitched.value = value;
   }
 
-  
+  void searchCategoryAndBrand(String query) {
+    searchQuery.value = query.toLowerCase();
+    if (query.isEmpty) {
+      filteredBrand.assignAll(brands);
+      filteredCategory.assignAll(category);
+    } else {
+      filteredCategory.assignAll(
+        category.where((cat) {
+          final categoryName = cat.categoryName.toLowerCase();
+          return categoryName.contains(searchQuery.value);
+        }).toList(),
+      );
+      filteredBrand.assignAll(
+        brands.where((brd) {
+          final brandName = brd.brandName.toLowerCase();
+          return brandName.contains(searchQuery.value);
+        }).toList(),
+      );
+    }
+  }
 
-
- 
   Future<void> fetchAllBrand() async {
     final response = await apiService.get(ApiUrl.getAllBrand);
     brands.assignAll(
@@ -52,7 +78,7 @@ class CraneController extends GetxController {
     isLoading.value = false;
   }
 
-   Future<void> fetchAllCtegory() async {
+  Future<void> fetchAllCtegory() async {
     final response = await apiService.get(ApiUrl.getAllCategory);
     category.assignAll(
       (response['categories'] as List)
@@ -60,6 +86,7 @@ class CraneController extends GetxController {
           .toList(),
     );
     log('fetched: ${category.length}');
+    filteredCategory.assignAll(category);
     isLoading.value = false;
   }
 
@@ -78,7 +105,7 @@ class CraneController extends GetxController {
       Exception("Somting Went Wrong");
     } finally {
       selectedImage(null);
-      nameController.text="";
+      nameController.text = "";
     }
   }
 
@@ -89,28 +116,25 @@ class CraneController extends GetxController {
     Map<String, File>? img,
   ) async {
     try {
-      
-      if (img==null) {
+      if (img == null) {
         await apiService.putFormData(
-        isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
-        fields: name,
-      );
-      }else{
+          isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
+          fields: name,
+        );
+      } else {
         await apiService.putFormData(
-        isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
-        fields: name,
-        files: img,
-      );
+          isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
+          fields: name,
+          files: img,
+        );
       }
     } catch (e) {
       Exception("Somting Went Wrong");
-    }finally{
+    } finally {
       selectedImage(null);
-      nameController.text="";
+      nameController.text = "";
     }
   }
-
- 
 
   void updateTabIndex(int index) {
     tabIndex.value = index;
@@ -187,7 +211,8 @@ class CraneController extends GetxController {
     bool iscreate,
     bool isbrand,
   ) {
-    final feilds =isbrand
+    final feilds =
+        isbrand
             ? {'brandName': nameController.text}
             : {'categoryName': nameController.text};
 
@@ -199,11 +224,8 @@ class CraneController extends GetxController {
       fileImage = null;
     }
 
-    
-   
-      updateBrandAndCategory(isbrand, id, feilds, fileImage);
-    
-    
+    updateBrandAndCategory(isbrand, id, feilds, fileImage);
+
     fetchAllCtegory();
 
     Navigator.of(context).pop();

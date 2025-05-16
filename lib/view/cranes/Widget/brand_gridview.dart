@@ -14,12 +14,9 @@ class BrandGridview extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
 
-      if (controller.category.isEmpty) {
+      if (controller.filteredBrand.isEmpty) {
         return const Center(
-          child: Text(
-            'No categories found',
-            style: TextStyle(color: Colors.red),
-          ),
+          child: Text('No Brand Found'),
         );
       }
 
@@ -30,9 +27,9 @@ class BrandGridview extends StatelessWidget {
           mainAxisSpacing: 16,
           mainAxisExtent: 200,
         ),
-        itemCount: controller.brands.length,
+        itemCount: controller.filteredBrand.length,
         itemBuilder: (context, index) {
-          final brand = controller.brands[index];
+          final brand = controller.filteredBrand[index];
           return Container(
             decoration: BoxDecoration(
               border: Border.all(
@@ -63,8 +60,10 @@ class BrandGridview extends StatelessWidget {
                   scale: 0.8,
                   child: Switch(
                     activeColor: Colors.green,
-                    value: true,
-                    onChanged: (value) {},
+                      value: controller.isSwitched.value,
+                    onChanged: (value) {
+                        controller.toggleSwitch(value);
+                      },
                   ),
                 ),
               ],

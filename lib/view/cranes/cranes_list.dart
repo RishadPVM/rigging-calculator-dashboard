@@ -45,96 +45,101 @@ class _CraneListPageState extends State<CraneListPage> with SingleTickerProvider
     return Scaffold(
       body: Padding(
         padding: const EdgeInsets.all(24.0),
-        child: Column(
-          spacing: 16,
-          children: [
-            const Header(title: "Cranes"),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                TabBar(
-                  controller: _tabController,
-                  dividerHeight: 48,
-                  dividerColor: AppColors.cGrey100,
-                  isScrollable: true,
-                  tabAlignment: TabAlignment.center,
-                  labelPadding: const EdgeInsets.symmetric(horizontal: 16),
-                  labelColor: Colors.white,
-                  unselectedLabelColor: Colors.black,
-                  indicatorSize: TabBarIndicatorSize.tab,
-                  indicator: BoxDecoration(
-                    color: const Color(0xFF9B1C1C),
-                    borderRadius: BorderRadius.circular(4),
+        child: Obx(
+          ()=> Column(
+            spacing: 16,
+            children: [
+              const Header(title: "Cranes"),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  TabBar(
+                    controller: _tabController,
+                    dividerHeight: 48,
+                    dividerColor: AppColors.cGrey100,
+                    isScrollable: true,
+                    tabAlignment: TabAlignment.center,
+                    labelPadding: const EdgeInsets.symmetric(horizontal: 16),
+                    labelColor: Colors.white,
+                    unselectedLabelColor: Colors.black,
+                    indicatorSize: TabBarIndicatorSize.tab,
+                    indicator: BoxDecoration(
+                      color: const Color(0xFF9B1C1C),
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    overlayColor: WidgetStateProperty.all(Colors.transparent),
+                    tabs: const [
+                      Tab(child: Text("Cranes")),
+                      Tab(child: Text("Brand")),
+                      Tab(child: Text("Category")),
+                    ],
                   ),
-                  overlayColor: WidgetStateProperty.all(Colors.transparent),
-                  tabs: const [
-                    Tab(child: Text("Cranes")),
-                    Tab(child: Text("Brand")),
-                    Tab(child: Text("Category")),
-                  ],
-                ),
-                Row(
-                  children: [
-                    const CsearchBar(hintText: "Search"),
-                    Obx(() => _craneController.showAddButton.value
-                        ? Row(
-                            children: [
-                              const SizedBox(width: 8),
-                              Container(
-                                height: 48,
-                                decoration: BoxDecoration(
-                                  color: AppColors.cRed100,
-                                  borderRadius: BorderRadius.circular(4),
-                                ),
-                                child: TextButton.icon(
-                                  onPressed: () {
-                                    _craneController.resetDialogState();
-                                    showDialog(
-                                      context: context,
-                                      builder: (context) => BrandCategoryDialoge(
-                                        isbrand: _craneController.tabIndex.value == 1,
-                                        iscreate: true,
+                  Row(
+                    children: [
+                       CsearchBar(hintText: "Search", 
+                      onChanged: (value) {
+                        _craneController.searchCategoryAndBrand(value); // Trigger search
+                      },),
+                    _craneController.showAddButton.value
+                          ? Row(
+                              children: [
+                                const SizedBox(width: 8),
+                                Container(
+                                  height: 48,
+                                  decoration: BoxDecoration(
+                                    color: AppColors.cRed100,
+                                    borderRadius: BorderRadius.circular(4),
+                                  ),
+                                  child: TextButton.icon(
+                                    onPressed: () {
+                                      _craneController.resetDialogState();
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) => BrandCategoryDialoge(
+                                          isbrand: _craneController.tabIndex.value == 1,
+                                          iscreate: true,
+                                        ),
+                                      ).then((result) {
+                                        if (result != null) {
+                                          developer.log('Dialog result: $result');
+                                        }
+                                      });
+                                    },
+                                    label: const Text(
+                                      "Add New",
+                                      style: TextStyle(
+                                        color: AppColors.cPrimary,
                                       ),
-                                    ).then((result) {
-                                      if (result != null) {
-                                        developer.log('Dialog result: $result');
-                                      }
-                                    });
-                                  },
-                                  label: const Text(
-                                    "Add New",
-                                    style: TextStyle(
+                                    ),
+                                    icon: const Icon(
+                                      Icons.add,
                                       color: AppColors.cPrimary,
                                     ),
-                                  ),
-                                  icon: const Icon(
-                                    Icons.add,
-                                    color: AppColors.cPrimary,
-                                  ),
-                                  style: TextButton.styleFrom(
-                                    foregroundColor: Colors.white,
+                                    style: TextButton.styleFrom(
+                                      foregroundColor: Colors.white,
+                                    ),
                                   ),
                                 ),
-                              ),
-                            ],
-                          )
-                        : const SizedBox.shrink()),
-                  ],
-                ),
-              ],
-            ),
-            const SizedBox(height: 16),
-            Expanded(
-              child: TabBarView(
-                controller: _tabController,
-                children: [
-                  CraneGridview(controller: navController),
-                  BrandGridview(),
-                  CategoryGridView(),
+                              ],
+                            )
+                          : const SizedBox.shrink(),
+                    ],
+                  ),
                 ],
               ),
-            ),
-          ],
+              const SizedBox(height: 16),
+              Expanded(
+                child: TabBarView(
+                  controller: _tabController,
+                  children: [
+                    CraneGridview(controller: navController),
+                    BrandGridview(),
+                    CategoryGridView(),
+                  ],
+                ),
+              ),
+            ],
+          ),
         ),
       ),
     );
