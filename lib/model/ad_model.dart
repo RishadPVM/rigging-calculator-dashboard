@@ -1,4 +1,4 @@
-import 'package:leo_rigging_dashboard/model/user_model.dart';
+import 'user_model.dart';
 
 class AdModel {
   final String id;
@@ -8,8 +8,8 @@ class AdModel {
   final String webUrl;
   final DateTime createdAt;
   final bool isActive;
-  final List<ClickUser> clickUsers;
-  final List<ReadUser> readUsers;
+  final List<ClickUserModel> clickUsers;
+  final List<dynamic> readUsers;
 
   AdModel({
     required this.id,
@@ -33,11 +33,9 @@ class AdModel {
       createdAt: DateTime.parse(json['createdAt']),
       isActive: json['isActive'],
       clickUsers: (json['clickUsers'] as List)
-          .map((e) => ClickUser.fromJson(e))
+          .map((e) => ClickUserModel.fromJson(e))
           .toList(),
-      readUsers: (json['readUsers'] as List)
-          .map((e) => ReadUser.fromJson(e))
-          .toList(),
+      readUsers: json['readUsers'] ?? [],
     );
   }
 
@@ -51,26 +49,29 @@ class AdModel {
       'createdAt': createdAt.toIso8601String(),
       'isActive': isActive,
       'clickUsers': clickUsers.map((e) => e.toJson()).toList(),
-      'readUsers': readUsers.map((e) => e.toJson()).toList(),
+      'readUsers': readUsers,
     };
   }
 }
 
-class ClickUser {
+class ClickUserModel {
+  final String id;
   final String userId;
   final String sponsorAdId;
   final DateTime clickAt;
   final UserModel user;
 
-  ClickUser({
+  ClickUserModel({
+    required this.id,
     required this.userId,
     required this.sponsorAdId,
     required this.clickAt,
     required this.user,
   });
 
-  factory ClickUser.fromJson(Map<String, dynamic> json) {
-    return ClickUser(
+  factory ClickUserModel.fromJson(Map<String, dynamic> json) {
+    return ClickUserModel(
+      id: json['id'],
       userId: json['userId'],
       sponsorAdId: json['sponsorAdId'],
       clickAt: DateTime.parse(json['clickAt']),
@@ -80,6 +81,7 @@ class ClickUser {
 
   Map<String, dynamic> toJson() {
     return {
+      'id': id,
       'userId': userId,
       'sponsorAdId': sponsorAdId,
       'clickAt': clickAt.toIso8601String(),
@@ -88,35 +90,4 @@ class ClickUser {
   }
 }
 
-class ReadUser {
-  final String userId;
-  final String sponsorAdId;
-  final DateTime readAt;
-  final UserModel user;
-
-  ReadUser({
-    required this.userId,
-    required this.sponsorAdId,
-    required this.readAt,
-    required this.user,
-  });
-
-  factory ReadUser.fromJson(Map<String, dynamic> json) {
-    return ReadUser(
-      userId: json['userId'],
-      sponsorAdId: json['sponsorAdId'],
-      readAt: DateTime.parse(json['readAt']),
-      user: UserModel.fromJson(json['user']),
-    );
-  }
-
-  Map<String, dynamic> toJson() {
-    return {
-      'userId': userId,
-      'sponsorAdId': sponsorAdId,
-      'readAt': readAt.toIso8601String(),
-      'user': user.toJson(),
-    };
-  }
-}
 

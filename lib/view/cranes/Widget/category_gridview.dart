@@ -16,7 +16,7 @@ class CategoryGridView extends StatelessWidget {
         return const Center(child: CircularProgressIndicator());
       }
 
-      if (controller.category.isEmpty) {
+      if (controller.filteredCategory.isEmpty) {
         return const Center(child: Text('No categories found'));
       }
 
@@ -27,9 +27,9 @@ class CategoryGridView extends StatelessWidget {
           mainAxisSpacing: 16,
           mainAxisExtent: 200,
         ),
-        itemCount: controller.category.length,
+        itemCount: controller.filteredCategory.length,
         itemBuilder: (context, index) {
-          final category = controller.category[index];
+          final category = controller.filteredCategory[index];
           return GestureDetector(
             onTap: () {
               showDialog(
