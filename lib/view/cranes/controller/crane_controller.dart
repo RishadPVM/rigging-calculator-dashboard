@@ -6,6 +6,7 @@ import 'package:get/get.dart';
 import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
 import 'package:leo_rigging_dashboard/model/category_model.dart';
+import 'package:leo_rigging_dashboard/model/crane_modal.dart';
 
 import '../../../core/api/api_service.dart';
 import '../../../core/api/api_url.dart';
@@ -19,6 +20,7 @@ class CraneController extends GetxController {
   final ImagePicker _picker = ImagePicker();
   var category = <CategoryModel>[].obs;
   var brands = <BrandModel>[].obs;
+  var cranes = <CraneModal>[].obs;
   ApiService apiService = ApiService();
   final RxBool isLoading = true.obs;
   RxBool isAspectRatioIssue = false.obs;
@@ -26,6 +28,7 @@ class CraneController extends GetxController {
 
   var filteredCategory = <CategoryModel>[].obs;
   var filteredBrand = <BrandModel>[].obs;
+  var filteredCrean = <CraneModal>[].obs;
   final RxString searchQuery = ''.obs;
 
   @override
@@ -37,9 +40,15 @@ class CraneController extends GetxController {
   }
 
   Future<void> fetchAllData() async {
-    await Future.wait([fetchAllBrand(), fetchAllCtegory()]);
+    await Future.wait(
+      [
+        fetchAllBrand(),
+         fetchAllCtegory(),
+        fetchAllCrane()
+      ]);
     filteredCategory.assignAll(category);
     filteredBrand.assignAll(brands);
+    filteredCrean.assignAll(cranes);
   }
 
   void toggleSwitch(bool value) {
@@ -51,6 +60,7 @@ class CraneController extends GetxController {
     if (query.isEmpty) {
       filteredBrand.assignAll(brands);
       filteredCategory.assignAll(category);
+      filteredCrean.assignAll(cranes);
     } else {
       filteredCategory.assignAll(
         category.where((cat) {
@@ -64,6 +74,15 @@ class CraneController extends GetxController {
           return brandName.contains(searchQuery.value);
         }).toList(),
       );
+      filteredCrean.assignAll(
+        cranes.where((car) {
+          final brandName = car.brand.brandName.toLowerCase();
+          final categoryName = car.category.categoryName.toLowerCase();
+          final modal = car.model.toLowerCase();
+          final jib = car.jib.toLowerCase();
+          return  brandName.contains(searchQuery.value) || categoryName.contains(searchQuery.value)|| modal.contains(searchQuery.value)||jib.contains(searchQuery.value);
+        },).toList(),
+        );
     }
   }
 
@@ -74,7 +93,6 @@ class CraneController extends GetxController {
           .map((json) => BrandModel.fromJson(json))
           .toList(),
     );
-    log('fetched: ${brands.length}');
     isLoading.value = false;
   }
 
@@ -85,8 +103,19 @@ class CraneController extends GetxController {
           .map((json) => CategoryModel.fromJson(json))
           .toList(),
     );
-    log('fetched: ${category.length}');
     filteredCategory.assignAll(category);
+    isLoading.value = false;
+  }
+
+   
+
+   Future<void> fetchAllCrane() async {
+    final response = await apiService.get(ApiUrl.getAllCrane);
+    cranes.assignAll(
+      (response['cranes'] as List)
+          .map((json) => CraneModal.fromJson(json))
+          .toList(),
+    );
     isLoading.value = false;
   }
 
