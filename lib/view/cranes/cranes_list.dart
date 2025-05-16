@@ -132,7 +132,7 @@ class _CraneListPageState extends State<CraneListPage> with SingleTickerProvider
                 child: TabBarView(
                   controller: _tabController,
                   children: [
-                    CraneGridview(controller: navController),
+                    CraneGridview(navcontroller: navController),
                     BrandGridview(),
                     CategoryGridView(),
                   ],
