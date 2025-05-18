@@ -3,9 +3,6 @@ import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/utils/enum.dart';
 import 'package:leo_rigging_dashboard/view/users/widgets/user_table_body.dart';
 
-
-import '../../core/country_decode.dart';
-import '../../model/user_model.dart';
 import '../../utils/appcolors.dart';
 import '../../widget/c_search_bar.dart';
 import '../../widget/header.dart';
