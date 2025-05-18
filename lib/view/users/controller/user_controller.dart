@@ -1,4 +1,5 @@
 import 'package:get/get.dart';
+import 'package:intl/intl.dart';
 import 'package:leo_rigging_dashboard/core/api/api_service.dart';
 import 'package:leo_rigging_dashboard/core/api/api_url.dart';
 import 'package:leo_rigging_dashboard/core/country_decode.dart';
@@ -52,9 +53,12 @@ class UserController extends GetxController {
           final country = countryMap[countryKey] != null
               ? countryMap[countryKey]!.toLowerCase()
               : '';
+              final dateFormatter = DateFormat('dd-MM-yyyy');
+              final createdDate = dateFormatter.format(user.createdAt);
           return companyName.contains(searchQuery.value) ||
               email.contains(searchQuery.value) ||
-              country.contains(searchQuery.value);
+              country.contains(searchQuery.value) ||
+              createdDate.contains(searchQuery.value);
         }).toList(),
       );
     }
