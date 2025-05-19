@@ -12,6 +12,7 @@ class CraneGridview extends StatelessWidget {
   });
 
   final Navcontroller navcontroller;
+  
 
   @override
   Widget build(BuildContext context) {
@@ -41,7 +42,9 @@ class CraneGridview extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-              navcontroller.overlappingNav(CraneDetails());
+              navcontroller.overlappingNav(CraneDetails(crane: crane,));
+             controller.fetchCraneEnquiry(crane.id);
+
             },
             child: Container(
               decoration: BoxDecoration(
