@@ -11,6 +11,7 @@ import 'package:leo_rigging_dashboard/model/crane_modal.dart';
 import '../../../core/api/api_service.dart';
 import '../../../core/api/api_url.dart';
 import '../../../model/brands_model.dart';
+import '../../../model/crane_enquiry.dart';
 
 class CraneController extends GetxController {
   final RxInt tabIndex = 0.obs;
@@ -20,6 +21,7 @@ class CraneController extends GetxController {
   final ImagePicker _picker = ImagePicker();
   var category = <CategoryModel>[].obs;
   var brands = <BrandModel>[].obs;
+  var craneEnquiry = <CraneEnquiryModel>[].obs;
   var cranes = <CraneModal>[].obs;
   ApiService apiService = ApiService();
   final RxBool isLoading = true.obs;
@@ -40,15 +42,11 @@ class CraneController extends GetxController {
   }
 
   Future<void> fetchAllData() async {
-    await Future.wait(
-      [
-        fetchAllBrand(),
-         fetchAllCtegory(),
-        fetchAllCrane()
-      ]);
+    await Future.wait([fetchAllBrand(), fetchAllCtegory(), fetchAllCrane(), ]);
     filteredCategory.assignAll(category);
     filteredBrand.assignAll(brands);
     filteredCrean.assignAll(cranes);
+  
   }
 
   void toggleSwitch(bool value) {
@@ -80,10 +78,23 @@ class CraneController extends GetxController {
           final categoryName = car.category.categoryName.toLowerCase();
           final modal = car.model.toLowerCase();
           final jib = car.jib.toLowerCase();
-          return  brandName.contains(searchQuery.value) || categoryName.contains(searchQuery.value)|| modal.contains(searchQuery.value)||jib.contains(searchQuery.value);
-        },).toList(),
-        );
+          return brandName.contains(searchQuery.value) ||
+              categoryName.contains(searchQuery.value) ||
+              modal.contains(searchQuery.value) ||
+              jib.contains(searchQuery.value);
+        }).toList(),
+      );
     }
+  }
+
+  Future<void> fetchCraneEnquiry(String id) async {
+    final response = await apiService.get("${ApiUrl.getAllCraneEnuiry}/$id");
+    craneEnquiry.assignAll(
+      (response['inquiry'] as List)
+          .map((json) => CraneEnquiryModel.fromJson(json))
+          .toList(),
+    );
+    isLoading.value = false;
   }
 
   Future<void> fetchAllBrand() async {
@@ -107,9 +118,7 @@ class CraneController extends GetxController {
     isLoading.value = false;
   }
 
-   
-
-   Future<void> fetchAllCrane() async {
+  Future<void> fetchAllCrane() async {
     final response = await apiService.get(ApiUrl.getAllCrane);
     cranes.assignAll(
       (response['cranes'] as List)
