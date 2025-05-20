@@ -1,23 +1,29 @@
-import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:http/http.dart' as http;
 import 'dart:convert';
 
+import 'package:flutter/material.dart';
+import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/core/LoginResponce/global_user.dart';
 import 'package:leo_rigging_dashboard/core/api/api_service.dart';
 import 'package:leo_rigging_dashboard/core/api/api_url.dart';
+import 'package:leo_rigging_dashboard/model/auth_model.dart';
+import 'package:shared_preferences/shared_preferences.dart';
+
+import '../../nav/nav.dart';
 
 class AuthController extends GetxController {
-  ApiService apiService = ApiService();
+  final apiService = ApiService();
 
   final Map<String, String> _defaultHeaders = {
     'Content-Type': 'application/json',
     'Accept': 'application/json',
   };
+
   var isLoading = false.obs;
-  var emailError = ''.obs;
-  var passwordError = ''.obs;
+  var isPasswordHide = true.obs;
+
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
+  final formKey = GlobalKey<FormState>();
 
   @override
   void onClose() {
@@ -26,44 +32,51 @@ class AuthController extends GetxController {
     super.onClose();
   }
 
-  Future<void> login() async {
-    emailError.value = '';
-    passwordError.value = '';
+  Future<void> saveLoginData(LoginResponse user) async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setString('adminData', jsonEncode(user.toJson()));
+  }
 
+  Future<void> logout() async {
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.remove('adminData');
+    GlobalUser().clearUser();
+  }
+
+  Future<void> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
 
-    // Input validation
-    if (email.isEmpty) {
-      emailError.value = 'Please enter your email';
-      return;
-    }
-    if (password.isEmpty) {
-      passwordError.value = 'Please enter your password';
-      return;
-    }
-
-    // Email format validation
-    final emailRegex = RegExp(r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$');
-    if (!emailRegex.hasMatch(email)) {
-      emailError.value = 'Please enter a valid email';
-      return;
-    }
-
     isLoading.value = true;
+
     try {
-      apiService.post(
+      final response = await apiService.post(
         ApiUrl.loginPost,
-        body: {
-          "email": emailController.text.trim(),
-          "password": passwordController.text.trim(),
-        },
+        headers: _defaultHeaders,
+        body: {"email": email, "password": password},
       );
+
+      // Handle decoded response (already parsed from _handleResponse)
+      if (response['status'] == true && response['token'] != null) {
+        final user = LoginResponse.fromJson(response);
+        await saveLoginData(user);
+        GlobalUser().setUser(user);
+        emailController.clear();
+        passwordController.clear();
+        Get.offAll(() => const NavPage());
+      } else {
+        Get.snackbar(
+          'Login Failed',
+          response['error'] ?? 'Invalid email or password',
+          backgroundColor: Colors.red,
+          colorText: Colors.white,
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
     } catch (e) {
-      // Handle network or server errors
       Get.snackbar(
         'Error',
-        e.toString(),
+        e.toString().replaceFirst('Exception: ', ''),
         backgroundColor: Colors.red,
         colorText: Colors.white,
         snackPosition: SnackPosition.BOTTOM,
