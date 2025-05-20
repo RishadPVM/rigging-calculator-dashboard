@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
-import 'package:leo_rigging_dashboard/view/users/controller/user_controller.dart';
+import 'package:leo_rigging_dashboard/view/auth/controller/auth_controller.dart';
+import 'package:leo_rigging_dashboard/view/auth/login/login.dart';
 
 import '../utils/appcolors.dart';
 import '../utils/assets.dart';
@@ -12,7 +13,7 @@ class Header extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    UserController userController = Get.put(UserController());
+    AuthController authController = Get.put(AuthController());
     return Row(
       children: [
         Expanded(
@@ -33,7 +34,7 @@ class Header extends StatelessWidget {
                 ),
                 icon: SvgPicture.asset(Assets.notificationIcon),
                 onPressed: () {
-userController.fetchUsers();
+                    // userController.fetchUsers();
                 },
               ),
             ),
@@ -63,12 +64,16 @@ userController.fetchUsers();
                     icon: SvgPicture.asset(Assets.arrowDownIcon),
                     itemBuilder: (context) {
                       return [
-                        const PopupMenuItem(
+                        PopupMenuItem(
                           value: 1,
                           child: Text(
                             "Logout",
                             style: TextStyle(color: AppColors.cPrimary),
                           ),
+                          onTap: ()async {
+                           await authController.logout();
+                           Get.offAll(()=> LoginPage());
+                          },
                         ),
                       ];
                     },

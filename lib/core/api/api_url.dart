@@ -10,6 +10,10 @@ class ApiUrl {
   static String getAllAds = "${baseurl}sponsor/getAllAds";
   static String getAllCategory = "${baseurl}crane/category/all";
   static String getAllBrand = "${baseurl}crane/brand/all";
+   static String getAllCraneEnuiry = "${baseurl}crane/inquiry";
+   
+   static String loginPost = "${baseurl}adminAuth/adminLogin";
+  
   static String postBrand = "${baseurl}crane/brand/";
   static String postCategory = "${baseurl}crane/category/create";
   static String editBrand = "${baseurl}crane/brand/";

@@ -122,7 +122,7 @@ class BrandCategoryDialoge extends StatelessWidget {
               const SizedBox(height: 8),
               CTextField(
                 labelText: isbrand ? "Brand name" : "Category name",
-                suffixIcon: Icons.abc_outlined,
+                suffixIcon: Icon( Icons.email_outlined),
                 controller: controller.nameController,
               ),
             ],

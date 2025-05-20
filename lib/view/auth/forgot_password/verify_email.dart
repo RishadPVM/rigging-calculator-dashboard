@@ -47,7 +47,7 @@ class VerifyEmail extends StatelessWidget {
                         SizedBox(height: 40),
                         CTextField(
                           labelText: 'E-mail',
-                          suffixIcon: Icons.email_outlined,
+                          suffixIcon: Icon( Icons.email_outlined),
                           keyboardType: TextInputType.none,
                           controller: emailController,
                           obscureText: false,

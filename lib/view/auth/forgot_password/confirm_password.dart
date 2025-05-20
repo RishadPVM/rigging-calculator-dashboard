@@ -48,7 +48,7 @@ class ConfirmPassword extends StatelessWidget {
                         SizedBox(height: 40),
                         CTextField(
                           labelText: 'New password',
-                          suffixIcon: Icons.visibility_off,
+                          suffixIcon: Icon(Icons.visibility_off),
                           keyboardType: TextInputType.none,
                           controller: newPassword,
                           obscureText: true,
@@ -56,7 +56,7 @@ class ConfirmPassword extends StatelessWidget {
                         SizedBox(height: 16),
                         CTextField(
                           labelText: 'Confirm password',
-                          suffixIcon: Icons.visibility_off,
+                          suffixIcon: Icon(Icons.visibility_off),
                           keyboardType: TextInputType.none,
                           controller: confirmPassword,
                           obscureText: true,

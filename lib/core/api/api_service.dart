@@ -151,15 +151,16 @@ Future<dynamic> postFormData(
 
   // Handle API response
   dynamic _handleResponse(http.Response response) {
-    final statusCode = response.statusCode;
-    final responseBody = json.decode(response.body);
+  final statusCode = response.statusCode;
+  final responseBody = json.decode(response.body);
 
-    if (statusCode >= 200 && statusCode < 300) {
-      return responseBody;
-    } else {
-      throw Exception('API Error: $statusCode - ${responseBody['message'] ?? 'Unknown error'}');
-    }
+  if (statusCode >= 200 && statusCode < 300) {
+    return responseBody;
+  } else {
+    throw Exception(responseBody['error'] ?? responseBody['message'] ?? 'Unknown error');
   }
+}
+
 
   // Handle errors
   Exception _handleError(dynamic error) {
