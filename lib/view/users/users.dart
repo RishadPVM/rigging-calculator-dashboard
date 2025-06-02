@@ -8,8 +8,8 @@ import '../../widget/c_search_bar.dart';
 import '../../widget/header.dart';
 import 'controller/user_controller.dart';
 
-class UsersPage extends StatelessWidget {
-  const UsersPage({super.key});
+class UserHomePage extends StatelessWidget {
+  const UserHomePage({super.key});
 
   @override
   Widget build(BuildContext context) {

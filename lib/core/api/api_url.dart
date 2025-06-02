@@ -18,4 +18,5 @@ class ApiUrl {
   static String postCategory = "${baseurl}crane/category/create";
   static String editBrand = "${baseurl}crane/brand/";
   static String editCategory = "${baseurl}crane/category";
+  static String getAllAdPlans = "${baseurl}sponsor/getAllPlans/";
 }
