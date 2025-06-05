@@ -3,7 +3,7 @@ import 'dart:convert';
 class AdsPlanModel {
   final String id;
   final String title;
-  final String description;
+  final String? description;
   final int minViews;
   final int maxViews;
   final String originalPrice;
@@ -31,7 +31,7 @@ class AdsPlanModel {
     return AdsPlanModel(
       id: json['id'],
       title: json['title'],
-      description: json['description'],
+      description: json['description']??'',
       minViews: json['minViews'],
       maxViews: json['maxViews'],
       originalPrice: json['originalPrice'],

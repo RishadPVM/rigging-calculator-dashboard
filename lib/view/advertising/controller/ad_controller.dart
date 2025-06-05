@@ -112,6 +112,8 @@ class AdController extends GetxController {
       'maxViews': int.parse(planMaxViewController.text),
       'originalPrice': planPriceController.text,
       'offerPrice': planOfferPriceController.text,
+      'description': planDescriptionController.text,
+      "isActive": true
     });
 
     if (response != null && response['success'] == true) {
