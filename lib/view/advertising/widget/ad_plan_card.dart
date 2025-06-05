@@ -96,7 +96,7 @@ class _PlanCardState extends State<PlanCard> {
               ),
               const SizedBox(height: 8),
               Text(
-                plan.description,
+                plan.description??'',
                 style: const TextStyle(fontSize: 14, color: Colors.black54),
                 maxLines: 3,
                 overflow: TextOverflow.ellipsis,

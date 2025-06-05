@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/view/advertising/widget/ad_plan_card.dart';
+import 'package:leo_rigging_dashboard/view/advertising/widget/create_edit_plan_pop.dart';
 
 import '../controller/ad_controller.dart';
 
@@ -34,7 +35,7 @@ class AdPlanGridView extends StatelessWidget {
         itemCount: adController.plans.length,
         itemBuilder: (context, index) {
           final plan = adController.plans[index];
-          return PlanCard(plan: plan);
+          return PlanCard(plan: plan,onEdit: () => addEditPlanPop(context, isEditMode: true, plan: plan),);
         },
       );
     });

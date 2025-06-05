@@ -4,6 +4,7 @@ import 'package:leo_rigging_dashboard/utils/appcolors.dart';
 import 'package:leo_rigging_dashboard/view/advertising/controller/ad_controller.dart';
 import 'package:leo_rigging_dashboard/view/advertising/widget/ad_gridview.dart';
 import 'package:leo_rigging_dashboard/view/advertising/widget/ad_plans_gridview.dart';
+import 'package:leo_rigging_dashboard/view/advertising/widget/create_edit_plan_pop.dart';
 import 'package:leo_rigging_dashboard/widget/header.dart';
 
 import '../../widget/c_search_bar.dart';
@@ -87,7 +88,7 @@ class AdHomePage extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(4),
                                   ),
                                   child: TextButton.icon(
-                                    onPressed: () {},
+                                    onPressed: ()=>  addEditPlanPop(context),
                                     label: const Text(
                                       "Add New",
                                       style: TextStyle(
