@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
-import 'package:leo_rigging_dashboard/view/admins/controller/adminController.dart';
+import 'package:leo_rigging_dashboard/view/admins/admin_access_panel.dart';
+import 'package:leo_rigging_dashboard/view/admins/controller/admin_controller.dart';
+
+import '../../nav/controller/navcontroller.dart';
 
 class AdminGridview extends StatefulWidget {
   const AdminGridview({super.key});
@@ -11,63 +14,6 @@ class AdminGridview extends StatefulWidget {
 }
 
 class _AdminGridviewState extends State<AdminGridview> {
-  final Map<int, Set<String>> selectedRoles = {};
-  final List<String> roleOptions = ['Admin', 'Editor', 'Viewer'];
-
-  void _showRoleDialog(BuildContext context, int index, String name) {
-    Set<String> currentRoles = Set.from(selectedRoles[index] ?? <String>{});
-
-    showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text("Select Roles for $name"),
-          content: StatefulBuilder(
-            builder: (context, setDialogState) {
-              return SizedBox(
-                width: 400,
-                child: ListView(
-                  shrinkWrap: true,
-                  children: roleOptions.map((role) {
-                    final isSelected = currentRoles.contains(role);
-                    return CheckboxListTile(
-                      value: isSelected,
-                      title: Text(role,style: TextStyle(color: Colors.black),),
-                      onChanged: (bool? value) {
-                        setDialogState(() {
-                          setState(() {
-                            if (value == true) {
-                              currentRoles.add(role);
-                            } else {
-                              currentRoles.remove(role);
-                            }
-                            selectedRoles[index] = currentRoles;
-                          });
-                        });
-                      },
-                    );
-                  }).toList(),
-                ),
-              );
-            },
-          ),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(),
-              child: const Text("Cancel"),
-            ),
-            ElevatedButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text("Done"),
-            ),
-          ],
-        );
-      },
-    );
-  }
-
   @override
   Widget build(BuildContext context) {
     final AdminController controller = Get.find<AdminController>();
@@ -82,6 +28,7 @@ class _AdminGridviewState extends State<AdminGridview> {
       if (adminList.isEmpty) {
         return const Center(child: Text("No admins available."));
       }
+        final Navcontroller navController = Get.find<Navcontroller>();
 
       return GridView.builder(
         padding: const EdgeInsets.all(16),
@@ -96,9 +43,10 @@ class _AdminGridviewState extends State<AdminGridview> {
           final admin = adminList[index];
 
           return GestureDetector(
-            onTap: () {
-              // controller.fetchAdminEnquiry(admin.id);
+               onTap: () {
+              navController.overlappingNav( AdminAccessPanel(),);
             },
+           
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.cGrey100,
@@ -119,17 +67,11 @@ class _AdminGridviewState extends State<AdminGridview> {
                   Text(
                     admin.email,
                     overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context)
-                        .textTheme
-                        .bodySmall
-                        ?.copyWith(color: AppColors.cPrimary),
+                    style: Theme.of(
+                      context,
+                    ).textTheme.bodySmall?.copyWith(color: AppColors.cGrey),
                   ),
                   const SizedBox(height: 16),
-                  ElevatedButton(
-                    onPressed: () =>
-                        _showRoleDialog(context, index, admin.adminName),
-                    child: const Text("Select Roles"),
-                  ),
                 ],
               ),
             ),

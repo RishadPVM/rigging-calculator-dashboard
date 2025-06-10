@@ -11,6 +11,7 @@ class ApiUrl {
   static String getAllCategory = "${baseurl}crane/category/all";
   static String getAllBrand = "${baseurl}crane/brand/all";
    static String getAllCraneEnuiry = "${baseurl}crane/inquiry";
+    static String getAllAdmins = "${baseurl}admin/getAll";
    
    static String loginPost = "${baseurl}adminAuth/adminLogin";
   
