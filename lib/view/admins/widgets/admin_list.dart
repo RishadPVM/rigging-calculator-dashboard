@@ -3,9 +3,71 @@ import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
 import 'package:leo_rigging_dashboard/view/admins/controller/adminController.dart';
 
-class AdminGridview extends StatelessWidget {
+class AdminGridview extends StatefulWidget {
   const AdminGridview({super.key});
-  
+
+  @override
+  State<AdminGridview> createState() => _AdminGridviewState();
+}
+
+class _AdminGridviewState extends State<AdminGridview> {
+  final Map<int, Set<String>> selectedRoles = {};
+  final List<String> roleOptions = ['Admin', 'Editor', 'Viewer'];
+
+  void _showRoleDialog(BuildContext context, int index, String name) {
+    Set<String> currentRoles = Set.from(selectedRoles[index] ?? <String>{});
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text("Select Roles for $name"),
+          content: StatefulBuilder(
+            builder: (context, setDialogState) {
+              return SizedBox(
+                width: 400,
+                child: ListView(
+                  shrinkWrap: true,
+                  children: roleOptions.map((role) {
+                    final isSelected = currentRoles.contains(role);
+                    return CheckboxListTile(
+                      value: isSelected,
+                      title: Text(role,style: TextStyle(color: Colors.black),),
+                      onChanged: (bool? value) {
+                        setDialogState(() {
+                          setState(() {
+                            if (value == true) {
+                              currentRoles.add(role);
+                            } else {
+                              currentRoles.remove(role);
+                            }
+                            selectedRoles[index] = currentRoles;
+                          });
+                        });
+                      },
+                    );
+                  }).toList(),
+                ),
+              );
+            },
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Cancel"),
+            ),
+            ElevatedButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              child: const Text("Done"),
+            ),
+          ],
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     final AdminController controller = Get.find<AdminController>();
@@ -22,11 +84,12 @@ class AdminGridview extends StatelessWidget {
       }
 
       return GridView.builder(
-        gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-          crossAxisCount: 4,
+        padding: const EdgeInsets.all(16),
+        gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 240,
           crossAxisSpacing: 20,
           mainAxisSpacing: 16,
-          mainAxisExtent: 350,
+          childAspectRatio: 4 / 4,
         ),
         itemCount: adminList.length,
         itemBuilder: (context, index) {
@@ -34,32 +97,19 @@ class AdminGridview extends StatelessWidget {
 
           return GestureDetector(
             onTap: () {
-            //  controller.fetchAdminEnquiry(admin.id);
-
+              // controller.fetchAdminEnquiry(admin.id);
             },
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.cGrey100,
                 borderRadius: BorderRadius.circular(4),
               ),
-              padding: const EdgeInsets.all(10.0),
+              padding: const EdgeInsets.all(8.0),
               child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  Container(
-                    height: 196,
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(4),
-                      // image: DecorationImage(
-                      //   // image: NetworkImage(
-                      //   //   crane.imageUrl.isNotEmpty
-                      //   //       ? crane.imageUrl.first
-                      //   //       : "https://via.placeholder.com/350",
-                      //   // ),
-                      //   fit: BoxFit.cover,
-                      // ),
-                    ),
-                  ),
+                  const CircleAvatar(radius: 30),
                   const SizedBox(height: 8),
                   Text(
                     admin.adminName,
@@ -74,7 +124,12 @@ class AdminGridview extends StatelessWidget {
                         .bodySmall
                         ?.copyWith(color: AppColors.cPrimary),
                   ),
-                  
+                  const SizedBox(height: 16),
+                  ElevatedButton(
+                    onPressed: () =>
+                        _showRoleDialog(context, index, admin.adminName),
+                    child: const Text("Select Roles"),
+                  ),
                 ],
               ),
             ),
@@ -84,4 +139,3 @@ class AdminGridview extends StatelessWidget {
     });
   }
 }
-
