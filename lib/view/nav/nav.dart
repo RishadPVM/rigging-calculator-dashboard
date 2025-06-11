@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/core/LoginResponce/global_user.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
 import 'package:leo_rigging_dashboard/utils/assets.dart';
 import 'package:leo_rigging_dashboard/view/nav/controller/navcontroller.dart';
@@ -58,13 +59,21 @@ class SidebarTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Navcontroller controller = Get.find<Navcontroller>();
 
-    List<String> names = ["Dashboard","Users", "Cranes", "Advertisements", "Manage Admins"];
+    List<String> names = [
+      "Dashboard",
+      "Users",
+      "Cranes",
+      "Advertisements",
+      if(GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
+      "Manage Admins",
+    ];
 
     List<String> icons = [
       Assets.dashBoard,
       Assets.usersIcon,
       Assets.craneIcon,
       Assets.adIcon,
+      if(GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
       Assets.settingsIcon,
     ];
     return ListView.builder(
@@ -108,6 +117,7 @@ class SidebarTile extends StatelessWidget {
               ),
               onTap: () {
                 controller.onItemTapped(index);
+                
               },
             ),
           );

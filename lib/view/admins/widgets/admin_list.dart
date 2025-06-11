@@ -28,7 +28,7 @@ class _AdminGridviewState extends State<AdminGridview> {
       if (adminList.isEmpty) {
         return const Center(child: Text("No admins available."));
       }
-        final Navcontroller navController = Get.find<Navcontroller>();
+      final Navcontroller navController = Get.find<Navcontroller>();
 
       return GridView.builder(
         padding: const EdgeInsets.all(16),
@@ -43,10 +43,10 @@ class _AdminGridviewState extends State<AdminGridview> {
           final admin = adminList[index];
 
           return GestureDetector(
-               onTap: () {
-              navController.overlappingNav( AdminAccessPanel(),);
+            onTap: () {
+              navController.overlappingNav(AdminAccessPanel(admin: admin,));
             },
-           
+
             child: Container(
               decoration: BoxDecoration(
                 color: AppColors.cGrey100,
@@ -57,7 +57,15 @@ class _AdminGridviewState extends State<AdminGridview> {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  const CircleAvatar(radius: 30),
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage:
+                        (admin.profilePhoto != null &&
+                                admin.profilePhoto!.isNotEmpty)
+                            ? NetworkImage(admin.profilePhoto!)
+                            : AssetImage('assets/images/avatar.jpg')
+                                as ImageProvider,
+                  ),
                   const SizedBox(height: 8),
                   Text(
                     admin.adminName,
