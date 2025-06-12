@@ -13,7 +13,7 @@ class LoginResponse {
 
   factory LoginResponse.fromJson(Map<String, dynamic> json) {
     return LoginResponse(
-      status: json['status'],
+      status: json['success']??false,
       admin: AdminModel.fromJson(json['admin']),
       token: json['token'],
     );

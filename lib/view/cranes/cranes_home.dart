@@ -11,6 +11,7 @@ import 'package:leo_rigging_dashboard/view/nav/controller/navcontroller.dart';
 import 'package:leo_rigging_dashboard/widget/c_search_bar.dart';
 import 'package:leo_rigging_dashboard/widget/header.dart';
 
+import '../../core/LoginResponce/global_user.dart';
 import 'controller/crane_controller.dart';
 
 class CraneHomePage extends StatefulWidget {
@@ -132,8 +133,14 @@ class _CraneHomePageState extends State<CraneHomePage> with SingleTickerProvider
                 child: TabBarView(
                   controller: _tabController,
                   children: [
+                      GlobalUser().currentUser!.admin.roles!.craneView != true?
+                            Center(child: Text("Permission Denied")):
                     CraneGridview(navcontroller: navController),
+                      GlobalUser().currentUser!.admin.roles!.brandView != true?
+                            Center(child: Text("Permission Denied")):
                     BrandGridview(),
+                      GlobalUser().currentUser!.admin.roles!.categoryView != true?
+                            Center(child: Text("Permission Denied")):
                     CategoryGridView(),
                   ],
                 ),

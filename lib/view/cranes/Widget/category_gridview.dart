@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/view/cranes/Widget/brand_category_dialoge.dart';
 
+import '../../../core/LoginResponce/global_user.dart';
 import '../controller/crane_controller.dart';
 
 class CategoryGridView extends StatelessWidget {
@@ -31,7 +32,7 @@ class CategoryGridView extends StatelessWidget {
         itemBuilder: (context, index) {
           final category = controller.filteredCategory[index];
           return GestureDetector(
-            onTap: () {
+            onTap:  GlobalUser().currentUser!.admin.roles!.craneView != true?() {
               showDialog(
                 context: context,
                 builder:
@@ -43,7 +44,7 @@ class CategoryGridView extends StatelessWidget {
                       id: category.id,
                     ),
               );
-            },
+            }:null,
             child: Container(
               decoration: BoxDecoration(
                 border: Border.all(

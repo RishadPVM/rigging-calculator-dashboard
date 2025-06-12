@@ -8,6 +8,7 @@ import 'package:leo_rigging_dashboard/core/api/api_url.dart';
 import 'package:leo_rigging_dashboard/model/auth_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+import '../../nav/controller/navcontroller.dart';
 import '../../nav/nav.dart';
 
 class AuthController extends GetxController {
@@ -46,7 +47,6 @@ class AuthController extends GetxController {
   Future<void> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
-
     isLoading.value = true;
 
     try {
@@ -55,14 +55,14 @@ class AuthController extends GetxController {
         headers: _defaultHeaders,
         body: {"email": email, "password": password},
       );
-
-      // Handle decoded response (already parsed from _handleResponse)
-      if (response['status'] == true && response['token'] != null) {
+      if (response['success'] == true && response['token'] != null) {
         final user = LoginResponse.fromJson(response);
         await saveLoginData(user);
         GlobalUser().setUser(user);
         emailController.clear();
         passwordController.clear();
+        final Navcontroller controller = Get.find<Navcontroller>();
+        controller.refreshPages();
         Get.offAll(() => const NavPage());
       } else {
         Get.snackbar(

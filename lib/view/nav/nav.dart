@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/core/LoginResponce/global_user.dart';
+import 'package:leo_rigging_dashboard/core/api/refresh_user.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
 import 'package:leo_rigging_dashboard/utils/assets.dart';
 import 'package:leo_rigging_dashboard/view/nav/controller/navcontroller.dart';
@@ -116,7 +117,9 @@ class SidebarTile extends StatelessWidget {
                 ),
               ),
               onTap: () {
+                refreshUser();
                 controller.onItemTapped(index);
+                
               },
             ),
           );

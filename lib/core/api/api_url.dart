@@ -13,6 +13,8 @@ class ApiUrl {
    static String getAllCraneEnuiry = "${baseurl}crane/inquiry";
     static String getAllAdmins = "${baseurl}admin/getAll";
      static String updateAdmin = "${baseurl}admin/updateAdmin/";
+      static String getOneadmin = "${baseurl}admin/getAdminById";
+  
     
    
    static String loginPost = "${baseurl}adminAuth/adminLogin";

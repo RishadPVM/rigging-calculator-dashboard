@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/core/LoginResponce/global_user.dart';
 import 'package:leo_rigging_dashboard/utils/enum.dart';
 import 'package:leo_rigging_dashboard/view/users/widgets/user_table_body.dart';
 
@@ -89,14 +90,21 @@ class UserHomePage extends StatelessWidget {
                       ? const Center(child: CircularProgressIndicator())
                       : TabBarView(
                           children: [
+                            GlobalUser().currentUser!.admin.roles!.userView != true?
+                            Center(child: Text("Permission Denied")):
+                            
                           UserTable(
                             users: userController.filteredUsers,
                             userRole: UserRole.allUsers,
                           ),
+                           GlobalUser().currentUser!.admin.roles!.sponsorView != true?
+                            Center(child: Text("Permission Denied")):
                           UserTable(
                             users: userController.filteredUsers.where((user) => user.sponsorAds.isNotEmpty).toList(),
                             userRole: UserRole.sponsors,
                           ),
+                           GlobalUser().currentUser!.admin.roles!.craneSellerView != true?
+                            Center(child: Text("Permission Denied")):
                           UserTable(
                             users: userController.filteredUsers.where((user) => user.cranes.isNotEmpty).toList(),
                             userRole: UserRole.craneSeller,
