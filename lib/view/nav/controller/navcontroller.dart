@@ -12,10 +12,10 @@ class Navcontroller extends GetxController {
   List pages = [
     Dashboard(),
     const UserHomePage(),
-     CraneHomePage(),
+    CraneHomePage(),
     const AdHomePage(),
-    if(GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
-    const AdminsPage(),
+    if (GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
+      const AdminsPage(),
   ];
 
   late Rx<Widget> selectedBody = Rx<Widget>(pages[0]);
@@ -25,10 +25,12 @@ class Navcontroller extends GetxController {
     selectedIndex.value = index;
     selectedBody.value = pages[index];
   }
+
   void overlappingNav(Widget page) {
-    selectedBody.value =page;
+    selectedBody.value = page;
   }
+
   void overlappingNavClose() {
-    selectedBody.value=pages[selectedIndex.value];
+    selectedBody.value = pages[selectedIndex.value];
   }
 }

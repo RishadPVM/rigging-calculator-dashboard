@@ -64,8 +64,8 @@ class SidebarTile extends StatelessWidget {
       "Users",
       "Cranes",
       "Advertisements",
-      if(GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
-      "Manage Admins",
+      if (GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
+        "Manage Admins",
     ];
 
     List<String> icons = [
@@ -73,8 +73,8 @@ class SidebarTile extends StatelessWidget {
       Assets.usersIcon,
       Assets.craneIcon,
       Assets.adIcon,
-      if(GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
-      Assets.settingsIcon,
+      if (GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
+        Assets.settingsIcon,
     ];
     return ListView.builder(
       itemCount: controller.pages.length,
@@ -117,7 +117,6 @@ class SidebarTile extends StatelessWidget {
               ),
               onTap: () {
                 controller.onItemTapped(index);
-                
               },
             ),
           );
