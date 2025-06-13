@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/core/LoginResponce/global_user.dart';
 import 'package:leo_rigging_dashboard/view/auth/controller/auth_controller.dart';
 import 'package:leo_rigging_dashboard/view/auth/login/login.dart';
 
@@ -34,51 +35,59 @@ class Header extends StatelessWidget {
                 ),
                 icon: SvgPicture.asset(Assets.notificationIcon),
                 onPressed: () {
-                    // userController.fetchUsers();
+                  // userController.fetchUsers();
                 },
               ),
             ),
             Container(
               height: 48,
-              width: 100,
 
+              //width: 100,
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(4),
                 color: AppColors.cGrey100,
               ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceAround,
-                children: [
-                  ClipRRect(
-                    borderRadius: BorderRadius.circular(4),
-                    child: Image.network(
-                      Assets.demoProfileImg,
-                      height: 40,
-                      width: 40,
-                      fit: BoxFit.cover,
+              child: Padding(
+                padding: const EdgeInsets.only(left: 8),
+                child: Row(
+                  spacing: 4,
+                  mainAxisAlignment: MainAxisAlignment.spaceAround,
+                  children: [
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(4),
+                      child: Image(
+                        image: (GlobalUser().currentUser!.admin.profilePhoto != null &&
+                                GlobalUser().currentUser!.admin.profilePhoto!.isNotEmpty)
+                            ? NetworkImage(GlobalUser().currentUser!.admin.profilePhoto!)
+                            : AssetImage('assets/images/avatar.jpg') as ImageProvider,
+                        height: 40,
+                        width: 40,
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                  ),
-                  PopupMenuButton(
-                    color: AppColors.cWhite,
+                    Text(GlobalUser().currentUser!.admin.adminName),
+                    PopupMenuButton(
+                      color: AppColors.cWhite,
 
-                    icon: SvgPicture.asset(Assets.arrowDownIcon),
-                    itemBuilder: (context) {
-                      return [
-                        PopupMenuItem(
-                          value: 1,
-                          child: Text(
-                            "Logout",
-                            style: TextStyle(color: AppColors.cPrimary),
+                      icon: SvgPicture.asset(Assets.arrowDownIcon),
+                      itemBuilder: (context) {
+                        return [
+                          PopupMenuItem(
+                            value: 1,
+                            child: Text(
+                              "Logout",
+                              style: TextStyle(color: AppColors.cPrimary),
+                            ),
+                            onTap: () async {
+                              await authController.logout();
+                              Get.offAll(() => LoginPage());
+                            },
                           ),
-                          onTap: ()async {
-                           await authController.logout();
-                           Get.offAll(()=> LoginPage());
-                          },
-                        ),
-                      ];
-                    },
-                  ),
-                ],
+                        ];
+                      },
+                    ),
+                  ],
+                ),
               ),
             ),
           ],

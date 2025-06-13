@@ -61,7 +61,7 @@ class AuthController extends GetxController {
         GlobalUser().setUser(user);
         emailController.clear();
         passwordController.clear();
-        final Navcontroller controller = Get.find<Navcontroller>();
+        final Navcontroller controller = Get.put(Navcontroller());
         controller.refreshPages();
         Get.offAll(() => const NavPage());
       } else {

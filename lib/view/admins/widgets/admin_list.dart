@@ -47,42 +47,68 @@ class _AdminGridviewState extends State<AdminGridview> {
               navController.overlappingNav(AdminAccessPanel(admin: admin,));
             },
 
-            child: Container(
-              decoration: BoxDecoration(
-                color: AppColors.cGrey100,
-                borderRadius: BorderRadius.circular(4),
-              ),
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  CircleAvatar(
-                    radius: 30,
-                    backgroundImage:
-                        (admin.profilePhoto != null &&
-                                admin.profilePhoto!.isNotEmpty)
-                            ? NetworkImage(admin.profilePhoto!)
-                            : AssetImage('assets/images/avatar.jpg')
-                                as ImageProvider,
+            child: Stack(
+              fit: StackFit.expand,
+              children: [
+                Container(
+                  decoration: BoxDecoration(
+                    color: AppColors.cGrey100,
+                    borderRadius: BorderRadius.circular(4),
                   ),
-                  const SizedBox(height: 8),
-                  Text(
-                    admin.adminName,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(context).textTheme.bodyLarge,
+                  padding: const EdgeInsets.all(8.0),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      CircleAvatar(
+                        radius: 30,
+                        backgroundImage:
+                            (admin.profilePhoto != null &&
+                                    admin.profilePhoto!.isNotEmpty)
+                                ? NetworkImage(admin.profilePhoto!)
+                                : AssetImage('assets/images/avatar.jpg')
+                                    as ImageProvider,
+                      ),
+                      const SizedBox(height: 8),
+                      Text(
+                        admin.adminName,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(context).textTheme.bodyLarge,
+                      ),
+                      Text(
+                        admin.email,
+                        overflow: TextOverflow.ellipsis,
+                        style: Theme.of(
+                          context,
+                        ).textTheme.bodySmall?.copyWith(color: AppColors.cGrey),
+                      ),
+                      const SizedBox(height: 16),
+                    ],
                   ),
-                  Text(
-                    admin.email,
-                    overflow: TextOverflow.ellipsis,
-                    style: Theme.of(
-                      context,
-                    ).textTheme.bodySmall?.copyWith(color: AppColors.cGrey),
-                  ),
-                  const SizedBox(height: 16),
-                ],
-              ),
+                ),
+               if (admin.type == "SUPPERADMIN")
+      Positioned(
+        top: 8,
+        right: 8,
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+          decoration: BoxDecoration(
+            color: Colors.redAccent,
+            borderRadius: BorderRadius.circular(4),
+          ),
+          child: const Text(
+            "SUPER ADMIN",
+            style: TextStyle(
+              color: Colors.white,
+              fontSize: 8,
+              fontWeight: FontWeight.bold,
             ),
+          ),
+        ),
+      ),
+              ],
+            ),
+         
           );
         },
       );

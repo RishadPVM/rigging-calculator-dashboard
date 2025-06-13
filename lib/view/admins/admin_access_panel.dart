@@ -16,17 +16,25 @@ class AdminAccessPanel extends StatefulWidget {
 }
 
 class _AdminAccessPanelState extends State<AdminAccessPanel> {
-  final Map<String, String> roleMapping = {
-    "userView": "User View",
-    "sponsorView": "Sponsor View",
-    "craneSellerView": "Crane Seller View",
-    "craneView": "Crane View",
-    "brandView": "Brand View",
-    "brandEdit": "Brand Edit",
-    "categoryView": "Category View",
-    "categoryEdit": "Category Edit",
-    "adsView": "Ads View",
-  };
+  final Map<String, String>roleMapping = {
+  "userView": "User View",
+  "sponsorView": "Sponsor View",
+  "craneSellerView": "Crane Seller View",
+  "craneView": "Crane View",
+  "brandView": "Brand View",
+  "brandCreate": "Brand Create",
+  "brandEdit": "Brand Edit",
+  "categoryView": "Category View",
+  "categoryCreate": "Category Create",
+  "categoryEdit": "Category Edit",
+  "adsView": "Ads View",
+  "adsBlockOption": "Ads Block Option",
+  "adsVerifiyOption": "Ads Verify Option",
+  "adsPlanView": "Ads Plan View",
+  "adsPlanCreate": "Ads Plan Create",
+  "adsPlanEdit": "Ads Plan Edit",
+};
+
 
   final Map<String, bool> roleStates = {};
   Map<String, bool> originalStates = {};
@@ -38,17 +46,25 @@ class _AdminAccessPanelState extends State<AdminAccessPanel> {
     super.initState();
     final roles = widget.admin.roles;
 
-    roleStates.addAll({
-      "userView": roles?.userView ?? false,
-      "sponsorView": roles?.sponsorView ?? false,
-      "craneSellerView": roles?.craneSellerView ?? false,
-      "craneView": roles?.craneView ?? false,
-      "brandView": roles?.brandView ?? false,
-      "brandEdit": roles?.brandEdit ?? false,
-      "categoryView": roles?.categoryView ?? false,
-      "categoryEdit": roles?.categoryEdit ?? false,
-      "adsView": roles?.adsView ?? false,
-    });
+  roleStates.addAll({
+  "userView": roles.userView,
+  "sponsorView": roles.sponsorView,
+  "craneSellerView": roles.craneSellerView,
+  "craneView": roles.craneView,
+  "brandView": roles.brandView,
+  "brandCreate": roles.brandCreate,
+  "brandEdit": roles.brandEdit,
+  "categoryView": roles.categoryView,
+  "categoryCreate": roles.categoryCreate,
+  "categoryEdit": roles.categoryEdit,
+  "adsView": roles.adsView,
+  "adsBlockOption": roles.adsBlockOption,
+  "adsVerifiyOption": roles.adsVerifiyOption,
+  "adsPlanView": roles.adsPlanView,
+  "adsPlanCreate": roles.adsPlanCreate,
+  "adsPlanEdit": roles.adsPlanEdit,
+});
+
 
     originalStates = Map.from(roleStates);
   }
@@ -69,18 +85,26 @@ class _AdminAccessPanelState extends State<AdminAccessPanel> {
   }
 
   void saveRoles() {
-    final updatedRoles = Roles(
-      adminId: widget.admin.id,
-      userView: roleStates["userView"] ?? false,
-      sponsorView: roleStates["sponsorView"] ?? false,
-      craneSellerView: roleStates["craneSellerView"] ?? false,
-      craneView: roleStates["craneView"] ?? false,
-      brandView: roleStates["brandView"] ?? false,
-      brandEdit: roleStates["brandEdit"] ?? false,
-      categoryView: roleStates["categoryView"] ?? false,
-      categoryEdit: roleStates["categoryEdit"] ?? false,
-      adsView: roleStates["adsView"] ?? false,
-    );
+   final updatedRoles = Roles(
+  adminId: widget.admin.id,
+  userView: roleStates["userView"] ?? false,
+  sponsorView: roleStates["sponsorView"] ?? false,
+  craneSellerView: roleStates["craneSellerView"] ?? false,
+  craneView: roleStates["craneView"] ?? false,
+  brandView: roleStates["brandView"] ?? false,
+  brandCreate: roleStates["brandCreate"] ?? false,
+  brandEdit: roleStates["brandEdit"] ?? false,
+  categoryView: roleStates["categoryView"] ?? false,
+  categoryCreate: roleStates["categoryCreate"] ?? false,
+  categoryEdit: roleStates["categoryEdit"] ?? false,
+  adsView: roleStates["adsView"] ?? false,
+  adsBlockOption: roleStates["adsBlockOption"] ?? false,
+  adsVerifiyOption: roleStates["adsVerifiyOption"] ?? false,
+  adsPlanView: roleStates["adsPlanView"] ?? false,
+  adsPlanCreate: roleStates["adsPlanCreate"] ?? false,
+  adsPlanEdit: roleStates["adsPlanEdit"] ?? false,
+);
+
 
     adminController.updateAdminRoles(widget.admin.id, updatedRoles).then((_) {
       originalStates = Map.from(roleStates);

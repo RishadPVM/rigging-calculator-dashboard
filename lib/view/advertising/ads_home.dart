@@ -7,6 +7,7 @@ import 'package:leo_rigging_dashboard/view/advertising/widget/ad_plans_gridview.
 import 'package:leo_rigging_dashboard/view/advertising/widget/create_edit_plan_pop.dart';
 import 'package:leo_rigging_dashboard/widget/header.dart';
 
+import '../../core/LoginResponce/global_user.dart';
 import '../../widget/c_search_bar.dart';
 
 class AdHomePage extends StatelessWidget {
@@ -80,7 +81,7 @@ class AdHomePage extends StatelessWidget {
                                 onChanged: (value) {},
                               ),
                               const SizedBox(width: 8),
-                              if (controller.selectedIndex.value == 1)
+                              if (controller.selectedIndex.value == 1 &&  GlobalUser().currentUser!.admin.roles.adsPlanCreate == true)
                                 Container(
                                   height: 48,
                                   decoration: BoxDecoration(
@@ -109,11 +110,11 @@ class AdHomePage extends StatelessWidget {
                     ],
                   ),
                   const SizedBox(height: 20),
-                  const Expanded(
+                   Expanded(
                     child: TabBarView(
                       children: [
-                        AdGridView(),
-                        AdPlanGridView(),
+                       GlobalUser().currentUser!.admin.roles.adsView == true? AdGridView():   Center(child: Text("Permission Denied")),
+                        GlobalUser().currentUser!.admin.roles.adsPlanView == true?  AdPlanGridView():Center(child: Text("Permission Denied")),
                       ],
                     ),
                   ),

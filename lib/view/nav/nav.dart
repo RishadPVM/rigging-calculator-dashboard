@@ -36,7 +36,7 @@ class NavPage extends StatelessWidget {
                     children: [
                       const SizedBox(height: 20),
                       Image.asset(Assets.logoWithImg),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 40),
                       SidebarTile(),
                     ],
                   ),

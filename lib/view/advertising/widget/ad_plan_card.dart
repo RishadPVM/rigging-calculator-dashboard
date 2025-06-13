@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:leo_rigging_dashboard/model/ad_plan_model.dart';
 
+import '../../../core/LoginResponce/global_user.dart';
+
 class PlanCard extends StatefulWidget {
   final AdsPlanModel plan;
   final VoidCallback? onEdit;
@@ -80,7 +82,7 @@ class _PlanCardState extends State<PlanCard> {
                           ),
                         ),
                         const SizedBox(width: 8),
-                        IconButton(onPressed: widget.onEdit, icon: const Icon(Icons.edit_note_sharp, color: Color.fromARGB(202, 50, 154, 239))),
+                     GlobalUser().currentUser!.admin.roles.adsPlanEdit == true?    IconButton(onPressed: widget.onEdit, icon: const Icon(Icons.edit_note_sharp, color: Color.fromARGB(202, 50, 154, 239))):SizedBox(),
                       ],
                     ),
                 ],
