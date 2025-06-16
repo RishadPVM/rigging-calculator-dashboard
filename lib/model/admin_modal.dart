@@ -21,6 +21,8 @@ class AdminModel {
     required this.roles,
   });
 
+  bool get isSuperAdmin => type == "SUPPERADMIN";
+
   factory AdminModel.fromJson(Map<String, dynamic> json) {
     return AdminModel(
       id: json['id'],
@@ -33,7 +35,9 @@ class AdminModel {
           : null,
       isBlocked: json['isBlocked'],
       type: json['type'],
-      roles: Roles.fromJson(json['roles']),
+      roles: json['roles'] != null
+          ? Roles.fromJson(json['roles'])
+          : Roles.empty(json['id']),
     );
   }
 
@@ -94,22 +98,44 @@ class Roles {
   factory Roles.fromJson(Map<String, dynamic> json) {
     return Roles(
       adminId: json['adminId'],
-      userView: json['userView']??false,
-      sponsorView: json['sponsorView']??false,
-      craneSellerView: json['craneSellerView']??false,
-      craneView: json['craneView']??false,
-      brandView: json['brandView']??false,
-      brandCreate: json['brandCreate']??false,
-      brandEdit: json['brandEdit']??false,
-      categoryView: json['categoryView']??false,
-      categoryCreate: json['categoryCreate']??false,
-      categoryEdit: json['categoryEdit']??false,
-      adsView: json['adsView']??false,
-      adsBlockOption: json['adsBlockOption']??false,
-      adsVerifiyOption: json['adsVerifiyOption']??false,
-      adsPlanView: json['adsPlanView']??false,
-      adsPlanCreate: json['adsPlanCreate']??false,
-      adsPlanEdit: json['adsPlanEdit']??false,
+      userView: json['userView'] ?? false,
+      sponsorView: json['sponsorView'] ?? false,
+      craneSellerView: json['craneSellerView'] ?? false,
+      craneView: json['craneView'] ?? false,
+      brandView: json['brandView'] ?? false,
+      brandCreate: json['brandCreate'] ?? false,
+      brandEdit: json['brandEdit'] ?? false,
+      categoryView: json['categoryView'] ?? false,
+      categoryCreate: json['categoryCreate'] ?? false,
+      categoryEdit: json['categoryEdit'] ?? false,
+      adsView: json['adsView'] ?? false,
+      adsBlockOption: json['adsBlockOption'] ?? false,
+      adsVerifiyOption: json['adsVerifiyOption'] ?? false,
+      adsPlanView: json['adsPlanView'] ?? false,
+      adsPlanCreate: json['adsPlanCreate'] ?? false,
+      adsPlanEdit: json['adsPlanEdit'] ?? false,
+    );
+  }
+
+  factory Roles.empty(String adminId) {
+    return Roles(
+      adminId: adminId,
+      userView: false,
+      sponsorView: false,
+      craneSellerView: false,
+      craneView: false,
+      brandView: false,
+      brandCreate: false,
+      brandEdit: false,
+      categoryView: false,
+      categoryCreate: false,
+      categoryEdit: false,
+      adsView: false,
+      adsBlockOption: false,
+      adsVerifiyOption: false,
+      adsPlanView: false,
+      adsPlanCreate: false,
+      adsPlanEdit: false,
     );
   }
 
