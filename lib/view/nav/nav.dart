@@ -35,6 +35,13 @@ class NavPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.find<AuthController>().logout();
+                      //     Get.offAll(() => const NavPage());
+                      //   },
+                      //   child: Image.asset(Assets.logoWithImg),
+                      // ),
                       Image.asset(Assets.logoWithImg),
                       const SizedBox(height: 40),
                       SidebarTile(),
@@ -65,6 +72,7 @@ class SidebarTile extends StatelessWidget {
       "Users",
       "Cranes",
       "Advertisements",
+      "Feedback",
       if (GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
         "Manage Admins",
     ];
@@ -74,6 +82,7 @@ class SidebarTile extends StatelessWidget {
       Assets.usersIcon,
       Assets.craneIcon,
       Assets.adIcon,
+      Assets.usersIcon,
       if (GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
         Assets.settingsIcon,
     ];
@@ -119,7 +128,6 @@ class SidebarTile extends StatelessWidget {
               onTap: () {
                 refreshUser();
                 controller.onItemTapped(index);
-                
               },
             ),
           );

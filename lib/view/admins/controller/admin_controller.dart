@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:developer';
+import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
@@ -38,6 +39,44 @@ class AdminController extends GetxController {
       isLoading.value = false;
     }
   }
+
+  Future<void> createAdmin({
+  required File? profileImage,
+  required String name,
+  required String email,
+  required String password,
+}) async {
+  isLoading.value = true;
+  try {
+    final response = await apiService.postFormData(
+      ApiUrl.createAdmin, 
+      fields: {
+        "adminName": name,
+        "email": email,
+        "password": password,
+      },
+      files:{'profilePhoto': profileImage!} 
+    );
+
+    final parsed = response is String ? jsonDecode(response) : response;
+    if (parsed['success'] == true) {
+      fetchAdminData();
+      Get.back();
+      Get.snackbar("Success", "Admin created",
+          snackPosition: SnackPosition.BOTTOM);
+    } else {
+      Get.snackbar("Error", parsed['message'] ?? "Failed to create admin",
+          snackPosition: SnackPosition.BOTTOM);
+    }
+  } catch (e) {
+    debugPrint("CreateAdmin error: $e");
+    Get.snackbar("Error", "Could not create admin",
+        snackPosition: SnackPosition.BOTTOM);
+  } finally {
+    isLoading.value = false;
+  }
+}
+
 
   Future<void> updateAdminRoles(String adminId, Roles roles) async {
     isLoading.value = true;

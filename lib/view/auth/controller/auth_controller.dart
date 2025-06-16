@@ -8,7 +8,6 @@ import 'package:leo_rigging_dashboard/core/api/api_url.dart';
 import 'package:leo_rigging_dashboard/model/auth_model.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import '../../nav/controller/navcontroller.dart';
 import '../../nav/nav.dart';
 
 class AuthController extends GetxController {
@@ -57,13 +56,23 @@ class AuthController extends GetxController {
       );
       if (response['success'] == true && response['token'] != null) {
         final user = LoginResponse.fromJson(response);
-        await saveLoginData(user);
-        GlobalUser().setUser(user);
-        emailController.clear();
-        passwordController.clear();
-        // final Navcontroller controller = Get.put(Navcontroller());
-        // controller.refreshPages();
-        Get.offAll(() => const NavPage());
+
+        if (user.admin.isBlocked) {
+          logout();
+          Get.showSnackbar(
+            const GetSnackBar(
+              message: "Your account has been blocked. Please contact support.",
+            ),
+          );
+        } else {
+          await saveLoginData(user);
+          GlobalUser().setUser(user);
+          emailController.clear();
+          passwordController.clear();
+          // final Navcontroller controller = Get.put(Navcontroller());
+          // controller.refreshPages();
+          Get.offAll(() => const NavPage());
+        }
       } else {
         Get.snackbar(
           'Login Failed',

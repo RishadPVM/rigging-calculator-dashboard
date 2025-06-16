@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/view/feedback/feedback.dart';
 
 import '../../../core/LoginResponce/global_user.dart';
 import '../../admins/manageAdmins.dart';
@@ -27,6 +28,7 @@ class Navcontroller extends GetxController {
       const UserHomePage(),
       CraneHomePage(),
       const AdHomePage(),
+      FeedbackPage()
     ]);
 
     if (GlobalUser().currentUser?.admin.type == 'SUPPERADMIN') {

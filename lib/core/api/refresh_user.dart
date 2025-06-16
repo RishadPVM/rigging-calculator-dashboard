@@ -2,9 +2,11 @@
 
 import 'dart:developer';
 
+import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/core/api/api_service.dart';
 import 'package:leo_rigging_dashboard/core/api/api_url.dart';
 import 'package:leo_rigging_dashboard/view/auth/controller/auth_controller.dart';
+import 'package:leo_rigging_dashboard/view/auth/login/login.dart';
 
 import '../../model/auth_model.dart';
 import '../LoginResponce/global_user.dart';
@@ -21,7 +23,17 @@ Future refreshUser() async {
          log(user.toString());
         await authcontroller.saveLoginData(user);
         GlobalUser().setUser(user);
-        // final Navcontroller controller = Get.find<Navcontroller>();
+        if(user.admin.isBlocked){
+          authcontroller.logout();
+          Get.offAll(() => const LoginPage()); 
+          Get.showSnackbar(
+            const GetSnackBar(
+              message: "Your account has been blocked. Please contact support.",
+              duration: Duration(seconds: 3),
+            ),
+          );
+        }
+   
         // controller.refreshPages();
         // Get.offAll(() => const NavPage());
       } else {
