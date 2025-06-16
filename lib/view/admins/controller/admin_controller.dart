@@ -129,7 +129,14 @@ Future<void> updateAdminType(String adminId, String type) async {
       body: {"type": type},
       headers: {"Content-Type": "application/json"},
     );
-   
+
+    final parsed = response is String ? jsonDecode(response) : response;
+
+    if (parsed['success'] == true) {
+     fetchAdminData() ;
+    } else {
+      Get.snackbar("Error", parsed['message'] ?? "Update failed");
+    }
   } catch (e, stackTrace) {
     debugPrint('Type update error: $e');
     debugPrintStack(stackTrace: stackTrace);
