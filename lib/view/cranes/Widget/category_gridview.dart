@@ -32,7 +32,7 @@ class CategoryGridView extends StatelessWidget {
         itemBuilder: (context, index) {
           final category = controller.filteredCategory[index];
           return GestureDetector(
-            onTap:  GlobalUser().currentUser!.admin.roles!.craneView != true?() {
+            onTap:  GlobalUser().currentUser!.admin.roles.craneView != true?() {
               showDialog(
                 context: context,
                 builder:

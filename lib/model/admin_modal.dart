@@ -74,6 +74,7 @@ class Roles {
   final bool adsPlanView;
   final bool adsPlanCreate;
   final bool adsPlanEdit;
+  final bool feedbackView;
 
   Roles({
     required this.adminId,
@@ -93,6 +94,7 @@ class Roles {
     required this.adsPlanView,
     required this.adsPlanCreate,
     required this.adsPlanEdit,
+    required this.feedbackView,
   });
 
   factory Roles.fromJson(Map<String, dynamic> json) {
@@ -114,6 +116,7 @@ class Roles {
       adsPlanView: json['adsPlanView'] ?? false,
       adsPlanCreate: json['adsPlanCreate'] ?? false,
       adsPlanEdit: json['adsPlanEdit'] ?? false,
+      feedbackView: json['feedbackView']??false,
     );
   }
 
@@ -136,6 +139,8 @@ class Roles {
       adsPlanView: false,
       adsPlanCreate: false,
       adsPlanEdit: false,
+      feedbackView: false,
+      
     );
   }
 
@@ -158,6 +163,7 @@ class Roles {
       'adsPlanView': adsPlanView,
       'adsPlanCreate': adsPlanCreate,
       'adsPlanEdit': adsPlanEdit,
+      'feedbackView': feedbackView,
     };
   }
 }

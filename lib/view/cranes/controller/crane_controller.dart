@@ -1,16 +1,18 @@
 import 'dart:io';
+import 'dart:typed_data';
 
+import 'package:crop_your_image/crop_your_image.dart';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
-import 'package:image/image.dart' as img;
 import 'package:image_picker/image_picker.dart';
+import 'package:leo_rigging_dashboard/model/brands_model.dart';
 import 'package:leo_rigging_dashboard/model/category_model.dart';
+import 'package:leo_rigging_dashboard/model/crane_enquiry.dart';
 import 'package:leo_rigging_dashboard/model/crane_modal.dart';
+import 'package:path_provider/path_provider.dart';
 
 import '../../../core/api/api_service.dart';
 import '../../../core/api/api_url.dart';
-import '../../../model/brands_model.dart';
-import '../../../model/crane_enquiry.dart';
 
 class CraneController extends GetxController {
   final RxInt tabIndex = 0.obs;
@@ -41,11 +43,10 @@ class CraneController extends GetxController {
   }
 
   Future<void> fetchAllData() async {
-    await Future.wait([fetchAllBrand(), fetchAllCtegory(), fetchAllCrane(), ]);
+    await Future.wait([fetchAllBrand(), fetchAllCtegory(), fetchAllCrane()]);
     filteredCategory.assignAll(category);
     filteredBrand.assignAll(brands);
     filteredCrean.assignAll(cranes);
-  
   }
 
   void toggleSwitch(bool value) {
@@ -60,16 +61,14 @@ class CraneController extends GetxController {
       filteredCrean.assignAll(cranes);
     } else {
       filteredCategory.assignAll(
-        category.where((cat) {
-          final categoryName = cat.categoryName.toLowerCase();
-          return categoryName.contains(searchQuery.value);
-        }).toList(),
+        category.where(
+          (cat) => cat.categoryName.toLowerCase().contains(searchQuery.value),
+        ),
       );
       filteredBrand.assignAll(
-        brands.where((brd) {
-          final brandName = brd.brandName.toLowerCase();
-          return brandName.contains(searchQuery.value);
-        }).toList(),
+        brands.where(
+          (brd) => brd.brandName.toLowerCase().contains(searchQuery.value),
+        ),
       );
       filteredCrean.assignAll(
         cranes.where((car) {
@@ -81,7 +80,7 @@ class CraneController extends GetxController {
               categoryName.contains(searchQuery.value) ||
               modal.contains(searchQuery.value) ||
               jib.contains(searchQuery.value);
-        }).toList(),
+        }),
       );
     }
   }
@@ -139,9 +138,9 @@ class CraneController extends GetxController {
         files: img,
       );
     } catch (e) {
-      Exception("Somting Went Wrong");
+      throw Exception("Something went wrong");
     } finally {
-      selectedImage(null);
+      selectedImage.value = null;
       nameController.text = "";
     }
   }
@@ -153,22 +152,15 @@ class CraneController extends GetxController {
     Map<String, File>? img,
   ) async {
     try {
-      if (img == null) {
-        await apiService.putFormData(
-          isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
-          fields: name,
-        );
-      } else {
-        await apiService.putFormData(
-          isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
-          fields: name,
-          files: img,
-        );
-      }
+      await apiService.putFormData(
+        isbrand ? "${ApiUrl.editBrand}/$id" : "${ApiUrl.editCategory}/$id",
+        fields: name,
+        files: img,
+      );
     } catch (e) {
-      Exception("Somting Went Wrong");
+      throw Exception("Something went wrong");
     } finally {
-      selectedImage(null);
+      selectedImage.value = null;
       nameController.text = "";
     }
   }
@@ -183,32 +175,28 @@ class CraneController extends GetxController {
     selectedImage.value = null;
   }
 
-  Future<void> pickAndValidateImage(bool isBrand) async {
-    final double aspectRatio = isBrand ? 2.35 / 1 : 1 / 1;
-    isAspectRatioIssue(false);
+  Future<void> pickAndCropImage(BuildContext context, bool isBrand) async {
+    final double requiredAspectRatio = isBrand ? 2.35 / 1 : 1 / 1;
+    isAspectRatioIssue.value = false;
     try {
       final XFile? image = await _picker.pickImage(source: ImageSource.gallery);
       if (image == null) return;
 
-      final bytes = await image.readAsBytes();
-      final decodedImage = img.decodeImage(bytes);
-      if (decodedImage == null) {
-        if (!Get.isSnackbarOpen) {
-          Get.snackbar('Error', 'Unable to process image');
-        }
-        return;
-      }
-
-      final currentAspectRatio = decodedImage.width / decodedImage.height;
-
-      if ((currentAspectRatio - aspectRatio).abs() > 0.05) {
-        isAspectRatioIssue(true);
-        return;
-      }
-
-      selectedImage.value = image;
+      await Navigator.of(context).push(
+        MaterialPageRoute(
+          builder:
+              (context) => CropImageScreen(
+                image: image,
+                requiredAspectRatio: requiredAspectRatio,
+                controller: this,
+              ),
+        ),
+      );
     } catch (e) {
-      isAspectRatioIssue(false);
+      isAspectRatioIssue.value = false;
+      if (!Get.isSnackbarOpen) {
+        Get.snackbar('Error', 'Unable to process image');
+      }
     }
   }
 
@@ -228,7 +216,7 @@ class CraneController extends GetxController {
       return;
     }
 
-    final feilds =
+    final fields =
         isbrand
             ? {'brandName': nameController.text}
             : {'categoryName': nameController.text};
@@ -236,9 +224,8 @@ class CraneController extends GetxController {
     final file = File(selectedImage.value!.path);
     final fileImage = isbrand ? {'imageUrl': file} : {'categoryimageUrl': file};
 
-    uploadBrandAndCategory(isbrand, feilds, fileImage);
-    fetchAllCtegory();
-
+    uploadBrandAndCategory(isbrand, fields, fileImage);
+    fetchAllData();
     Navigator.of(context).pop();
   }
 
@@ -248,7 +235,7 @@ class CraneController extends GetxController {
     bool iscreate,
     bool isbrand,
   ) {
-    final feilds =
+    final fields =
         isbrand
             ? {'brandName': nameController.text}
             : {'categoryName': nameController.text};
@@ -261,10 +248,8 @@ class CraneController extends GetxController {
       fileImage = null;
     }
 
-    updateBrandAndCategory(isbrand, id, feilds, fileImage);
-
-    fetchAllCtegory();
-
+    updateBrandAndCategory(isbrand, id, fields, fileImage);
+    fetchAllData();
     Navigator.of(context).pop();
   }
 
@@ -278,5 +263,116 @@ class CraneController extends GetxController {
   void onClose() {
     nameController.dispose();
     super.onClose();
+  }
+}
+
+class CropImageScreen extends StatelessWidget {
+  final XFile image;
+  final double requiredAspectRatio;
+  final CraneController controller;
+
+  const CropImageScreen({
+    super.key,
+    required this.image,
+    required this.requiredAspectRatio,
+    required this.controller,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final CropController cropController = CropController();
+    final navigator = Navigator.of(context);
+
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text("Crop Image"),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.check),
+            onPressed: () {
+              cropController.crop();
+            },
+          ),
+          IconButton(
+            icon: const Icon(Icons.cancel),
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+          ),
+        ],
+      ),
+      body: Center(
+        child: FutureBuilder(
+          future: File(image.path).readAsBytes(),
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+            if (snapshot.hasError || !snapshot.hasData) {
+              return const Center(child: Text("Error loading image"));
+            }
+            return LayoutBuilder(
+              builder: (context, constraints) {
+                final size =
+                    constraints.maxWidth < constraints.maxHeight
+                        ? constraints.maxWidth * 0.8
+                        : constraints.maxHeight * 0.8;
+
+                return SizedBox(
+                  width: size,
+                  height: size,
+                  child: Crop(
+                    controller: cropController,
+                    image: snapshot.data!,
+                    aspectRatio: requiredAspectRatio,
+                    onCropped: (CropResult result) async {
+                      switch (result) {
+                        case CropSuccess(:final croppedImage):
+                          await _handleCroppedBytes(croppedImage, navigator);
+                          break;
+
+                        case CropFailure(:final cause):
+                          if (!Get.isSnackbarOpen) {
+                            Get.snackbar(
+                              'Error',
+                              'Crop failed: $cause',
+                              snackPosition: SnackPosition.BOTTOM,
+                            );
+                          }
+                          break;
+                      }
+                    },
+                  ),
+                );
+              },
+            );
+          },
+        ),
+      ),
+    );
+  }
+
+  Future<void> _handleCroppedBytes(
+    Uint8List croppedBytes,
+    NavigatorState navigator,
+  ) async {
+    try {
+      final tempDir = await getTemporaryDirectory();
+      final tempFile = File(
+        '${tempDir.path}/cropped_${DateTime.now().millisecondsSinceEpoch}.jpg',
+      );
+      await tempFile.writeAsBytes(croppedBytes);
+      controller.selectedImage.value = XFile(tempFile.path);
+      controller.isAspectRatioIssue.value = false;
+      navigator.pop();
+    } catch (e) {
+      if (!Get.isSnackbarOpen) {
+        Get.snackbar(
+          'Error',
+          'Failed to save cropped image: $e',
+          snackPosition: SnackPosition.BOTTOM,
+        );
+      }
+    }
   }
 }

@@ -13,10 +13,11 @@ class ApiUrl {
   static String getAllAdmins = "${baseurl}admin/getAll";
   static String updateAdmin = "${baseurl}admin/updateAdmin/";
   static String getOneadmin = "${baseurl}admin/getAdminById";
+  static String getAllFeedbacks = "${baseurl}app/getAllFeedbacks";
 
   static String loginPost = "${baseurl}adminAuth/adminLogin";
 
-  static String postBrand = "${baseurl}crane/brand/";
+  static String postBrand = "${baseurl}crane/brand/create";
   static String postCategory = "${baseurl}crane/category/create";
   static String createAdmin = "${baseurl}adminAuth/adminRegister";
 
