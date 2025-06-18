@@ -24,6 +24,8 @@ dependencies:
   syncfusion_flutter_charts: ^29.1.41
   syncfusion_flutter_maps: ^29.1.41
   shared_preferences: ^2.5.3
+  path_provider: ^2.1.1
+  crop_your_image: ^2.0.0
 
 dev_dependencies:
   flutter_test:

@@ -20,6 +20,7 @@ class Dashboard extends StatelessWidget {
           if (controller.isLoading.value) {
             return const Center(child: CircularProgressIndicator());
           }
+          
           return Column(
             children: [
               const Header(title: "Dashboard"),

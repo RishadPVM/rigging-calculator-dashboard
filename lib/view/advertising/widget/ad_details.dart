@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:leo_rigging_dashboard/model/ad_model.dart';
 
-import '../../utils/appcolors.dart';
-import '../../widget/count_card.dart';
-import '../../widget/header.dart';
-import '../nav/controller/navcontroller.dart';
+import '../../../utils/appcolors.dart';
+import '../../../widget/count_card.dart';
+import '../../../widget/header.dart';
+import '../../nav/controller/navcontroller.dart';
 
 class AdDetails extends StatelessWidget {
   final AdModel ad;

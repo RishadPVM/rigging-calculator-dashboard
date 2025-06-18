@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:get/get.dart';
+import 'package:leo_rigging_dashboard/core/LoginResponce/global_user.dart';
+import 'package:leo_rigging_dashboard/core/api/refresh_user.dart';
 import 'package:leo_rigging_dashboard/utils/appcolors.dart';
 import 'package:leo_rigging_dashboard/utils/assets.dart';
 import 'package:leo_rigging_dashboard/view/nav/controller/navcontroller.dart';
@@ -33,8 +35,15 @@ class NavPage extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       const SizedBox(height: 20),
+                      // GestureDetector(
+                      //   onTap: () {
+                      //     Get.find<AuthController>().logout();
+                      //     Get.offAll(() => const NavPage());
+                      //   },
+                      //   child: Image.asset(Assets.logoWithImg),
+                      // ),
                       Image.asset(Assets.logoWithImg),
-                      const SizedBox(height: 20),
+                      const SizedBox(height: 40),
                       SidebarTile(),
                     ],
                   ),
@@ -58,14 +67,24 @@ class SidebarTile extends StatelessWidget {
   Widget build(BuildContext context) {
     final Navcontroller controller = Get.find<Navcontroller>();
 
-    List<String> names = ["Dashboard","Users", "Cranes", "Advertisements", "Payments"];
+    List<String> names = [
+      "Dashboard",
+      "Users",
+      "Cranes",
+      "Advertisements",
+      "Feedback",
+      if (GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
+        "Manage Admins",
+    ];
 
     List<String> icons = [
       Assets.dashBoard,
       Assets.usersIcon,
       Assets.craneIcon,
       Assets.adIcon,
-      Assets.settingsIcon,
+      Assets.usersIcon,
+      if (GlobalUser().currentUser!.admin.type == 'SUPPERADMIN')
+        Assets.settingsIcon,
     ];
     return ListView.builder(
       itemCount: controller.pages.length,
@@ -107,6 +126,7 @@ class SidebarTile extends StatelessWidget {
                 ),
               ),
               onTap: () {
+                refreshUser();
                 controller.onItemTapped(index);
               },
             ),

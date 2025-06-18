@@ -11,16 +11,17 @@ import 'package:leo_rigging_dashboard/view/nav/controller/navcontroller.dart';
 import 'package:leo_rigging_dashboard/widget/c_search_bar.dart';
 import 'package:leo_rigging_dashboard/widget/header.dart';
 
+import '../../core/LoginResponce/global_user.dart';
 import 'controller/crane_controller.dart';
 
-class CraneListPage extends StatefulWidget {
-  const CraneListPage({super.key});
+class CraneHomePage extends StatefulWidget {
+  const CraneHomePage({super.key});
 
   @override
-  State<CraneListPage> createState() => _CraneListPageState();
+  State<CraneHomePage> createState() => _CraneHomePageState();
 }
 
-class _CraneListPageState extends State<CraneListPage> with SingleTickerProviderStateMixin {
+class _CraneHomePageState extends State<CraneHomePage> with SingleTickerProviderStateMixin {
   late TabController _tabController;
   final CraneController _craneController = Get.put(CraneController());
 
@@ -132,8 +133,14 @@ class _CraneListPageState extends State<CraneListPage> with SingleTickerProvider
                 child: TabBarView(
                   controller: _tabController,
                   children: [
+                      GlobalUser().currentUser!.admin.roles!.craneView != true?
+                            Center(child: Text("Permission Denied")):
                     CraneGridview(navcontroller: navController),
+                      GlobalUser().currentUser!.admin.roles!.brandView != true?
+                            Center(child: Text("Permission Denied")):
                     BrandGridview(),
+                      GlobalUser().currentUser!.admin.roles!.categoryView != true?
+                            Center(child: Text("Permission Denied")):
                     CategoryGridView(),
                   ],
                 ),

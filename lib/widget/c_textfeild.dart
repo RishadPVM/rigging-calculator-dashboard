@@ -14,7 +14,7 @@ class CTextField extends StatelessWidget {
   const CTextField({
     super.key,
     required this.labelText,
-    required this.suffixIcon,
+     this.suffixIcon,
      this.keyboardType = TextInputType.text,
      this.obscureText,
     this.controller,

@@ -46,7 +46,6 @@ class AuthController extends GetxController {
   Future<void> login() async {
     final email = emailController.text.trim();
     final password = passwordController.text.trim();
-
     isLoading.value = true;
 
     try {
@@ -55,15 +54,25 @@ class AuthController extends GetxController {
         headers: _defaultHeaders,
         body: {"email": email, "password": password},
       );
-
-      // Handle decoded response (already parsed from _handleResponse)
-      if (response['status'] == true && response['token'] != null) {
+      if (response['success'] == true && response['token'] != null) {
         final user = LoginResponse.fromJson(response);
-        await saveLoginData(user);
-        GlobalUser().setUser(user);
-        emailController.clear();
-        passwordController.clear();
-        Get.offAll(() => const NavPage());
+
+        if (user.admin.isBlocked) {
+          logout();
+          Get.showSnackbar(
+            const GetSnackBar(
+              message: "Your account has been blocked. Please contact support.",
+            ),
+          );
+        } else {
+          await saveLoginData(user);
+          GlobalUser().setUser(user);
+          emailController.clear();
+          passwordController.clear();
+          // final Navcontroller controller = Get.put(Navcontroller());
+          // controller.refreshPages();
+          Get.offAll(() => const NavPage());
+        }
       } else {
         Get.snackbar(
           'Login Failed',
