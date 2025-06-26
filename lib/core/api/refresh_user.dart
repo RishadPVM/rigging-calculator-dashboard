@@ -18,7 +18,6 @@ Future refreshUser() async {
   try {
     final response = await apiService.get("${ApiUrl.getOneadmin}/${GlobalUser().currentUser!.admin.id}");
       if (response['success'] == true && response['token'] != null) {
-        log("*********** FUNCTION WORKING **************");
         final user = LoginResponse.fromJson(response);
          log(user.toString());
         await authcontroller.saveLoginData(user);
@@ -33,9 +32,6 @@ Future refreshUser() async {
             ),
           );
         }
-   
-        // controller.refreshPages();
-        // Get.offAll(() => const NavPage());
       } else {
          log("*********** FUNCTION NOT WORKING **************");
       throw Exception("Error: ${response.statusCode}");
