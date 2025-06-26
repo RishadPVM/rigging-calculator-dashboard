@@ -1,3 +1,4 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:get/get.dart';
 import 'package:intl/intl.dart';
 import 'package:leo_rigging_dashboard/core/api/api_service.dart';
@@ -27,6 +28,8 @@ class UserController extends GetxController {
           .map((json) => UserModel.fromJson(json))
           .toList(),
     );
+    final String aiUserID = dotenv.env['AI_USERID'] ?? '';
+    users.removeWhere((user) => user.id == aiUserID);
 
     // Sort users by lastActive (descending: most recent first)
     users.sort((a, b) {
