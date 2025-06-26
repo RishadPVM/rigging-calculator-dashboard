@@ -33,6 +33,7 @@ class _AdminAccessPanelState extends State<AdminAccessPanel> {
     "adsPlanView": "Ads Plan View",
     "adsPlanCreate": "Ads Plan Create",
     "adsPlanEdit": "Ads Plan Edit",
+    "feedbackView":"Feedback View"
   };
 
   final roleStates = <String, RxBool>{}.obs;
@@ -64,6 +65,7 @@ class _AdminAccessPanelState extends State<AdminAccessPanel> {
       "adsPlanView": roles.adsPlanView,
       "adsPlanCreate": roles.adsPlanCreate,
       "adsPlanEdit": roles.adsPlanEdit,
+      "feedbackView":roles.feedbackView,
     };
 
     map.forEach((key, value) {
@@ -105,6 +107,8 @@ class _AdminAccessPanelState extends State<AdminAccessPanel> {
       adsPlanView: roleStates["adsPlanView"]?.value ?? false,
       adsPlanCreate: roleStates["adsPlanCreate"]?.value ?? false,
       adsPlanEdit: roleStates["adsPlanEdit"]?.value ?? false,
+       feedbackView:  roleStates["feedbackView"]?.value ?? false,
+      
     );
 
     adminController.updateAdminRoles(widget.admin.id, updatedRoles).then((_) {

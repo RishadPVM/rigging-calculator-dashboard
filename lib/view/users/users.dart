@@ -90,14 +90,14 @@ class UserHomePage extends StatelessWidget {
                       ? const Center(child: CircularProgressIndicator())
                       : TabBarView(
                           children: [
-                            GlobalUser().currentUser!.admin.roles!.userView != true?
+                            GlobalUser().currentUser!.admin.roles.userView != true?
                             Center(child: Text("Permission Denied")):
                             
                           UserTable(
                             users: userController.filteredUsers,
                             userRole: UserRole.allUsers,
                           ),
-                           GlobalUser().currentUser!.admin.roles!.sponsorView != true?
+                           GlobalUser().currentUser!.admin.roles.sponsorView != true?
                             Center(child: Text("Permission Denied")):
                           UserTable(
                             users: userController.filteredUsers.where((user) => user.sponsorAds.isNotEmpty).toList(),
